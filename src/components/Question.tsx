@@ -30,6 +30,7 @@ export function Question({
    isAnswered = false, 
    isHighLighted = false,  
    children } : QuestionProps) {   
+     
     // Array.Prototype.Capitalize - transformar todos os primeiros caracteres das palavras em letras maiusculas.
    function convertFirstCharacterAllWordsToUppercase(item: string) {
       return item?.replace( /\b(\w)/g, string => string?.toUpperCase() );

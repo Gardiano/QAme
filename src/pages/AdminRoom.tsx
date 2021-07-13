@@ -1,4 +1,4 @@
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 
 import CheckImg from "../assets/check.svg";
 import answerImg from "../assets/answer.svg";
@@ -42,10 +42,14 @@ export function AdminRoom() {
   const { title, questions } = useRoom(roomId);
 
   const [isTrue, setIsTrue] = useState<boolean>(false);
-  const [answered, setAnswered] = useState<string>();
+
+  // const [answered, setAnswered] = useState<string>();
+
   // const [answeredArray, setAnsweredArray] = useState<any[]>([]);
 
-  useEffect(() => {}, [roomId]);
+  useEffect( () => {
+
+  }, [roomId] );
 
   async function handleEndRoom() {
     database.ref(`rooms/${roomId}`).update({ endedAt: new Date() });
@@ -57,18 +61,18 @@ export function AdminRoom() {
       await database.ref(`rooms/${roomId}/questions/${questionId}`).remove();
     }
   }
-   
+
   async function handleCheckQuestionAsAnswered(questionId: string) {
     await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
       isAnswered: true,
     });
   }
 
-  async function handleAnswerQuestion(questionId: string) {
-    await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
-      answers: answered,
-    });
-  }
+  // async function handleAnswerQuestion(questionId: string) {
+  //   await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+  //     answers: answered,
+  //   });
+  // }
 
   // async function handleHighLightedQuestion(questionId: string) {
   //   await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
@@ -77,88 +81,22 @@ export function AdminRoom() {
   // }
 
   const handleClickInside = () => {
-    if (isTrue === false) {
+    if ( isTrue === false ) {
       setIsTrue(true);
     }
   };
 
   const handleClickOutside = () => {
-    if (isTrue === true) {
+    if ( isTrue === true ) {
       setIsTrue(false);
     }
   };
 
   // inserindo node no DOM
-  useOnClickOutside(ref, handleClickOutside);
+  useOnClickOutside( ref, handleClickOutside );
 
   return (
     <div id="page-room">
-      {isTrue && (
-        <div className="answer-container">
-          <div className="answer-modal" ref={ref}>
-            <div className="question-list">
-              {questions.map( (question) => {
-                return (
-                  <>
-                    <Question
-                      key={question.id}
-                      content={question.content}
-                      author={question.author}
-                      isAnswered={question.isAnswered}
-                      isHighLighted={question.isHighLighted}
-                      createdAt={question.createdAt}
-                      answers={question.answers}
-                    />                    
-                  </>
-                );
-              })}
-            </div>
-
-            {/* onSubmit={handleAnswerQuestion as any} */}
-            <form>
-              <textarea
-                placeholder="Responder pergunta: "
-                onChange={ (e) => setAnswered(e.target.value) }
-                value={ answered }
-              />
-
-              {/* <Button type="submit" disabled={!user}>
-                  Enviar Resposta
-                </Button> */}
-
-              {questions.map((question) => {
-                return (
-                  <>
-                    <Button
-                      onClick={() => handleAnswerQuestion(question.id)}
-                      type="submit"
-                      disabled={!user}
-                    >
-                      Enviar
-                    </Button>
-                  </>
-                );
-              })}
-
-              {/* <div className="form-footer">
-                {user ? (
-                  <div className="user-info">
-                    <img src={user.avatar} alt="avatar" />
-                    <span> {  } </span>
-                  </div>
-                ) : (
-                  <span>
-                    Para enviar uma pergunta,
-                    <button onClick={signInWithGoogle}> faça seu login </button>.
-                  </span>
-                )}                
-              </div> */}
-
-            </form>
-          </div>
-        </div>
-      )}
-
       <header>
         <div className="content">
           <img src={logoImg} alt="askm" />
@@ -173,20 +111,20 @@ export function AdminRoom() {
 
       <main className="content">
         <div className="room-title">
-          <h1> {title} </h1>
-          {questions.length === 0 ? (
+          <h1> { title } </h1>
+          { questions.length === 0 ? (
             <span> Esperando por perguntas </span>
           ) : (
-            <span> {questions.length} Perguntas </span>
+            <span> { questions.length } Perguntas </span>
           )}
         </div>
 
         <div className="question-list">
-          {questions.map((question) => {
+          { questions.map( (question) => {
             return (
               <>
                 <Question
-                 
+                  key={question.id}
                   content={question.content}
                   author={question.author}
                   isAnswered={question.isAnswered}
@@ -196,9 +134,14 @@ export function AdminRoom() {
                 >
                   {!question.isAnswered && (
                     <>
-                      <button type="button" onClick={ () => handleCheckQuestionAsAnswered(question.id) }>
-                        <img src={ CheckImg } alt="Marcar Pergunta" />
-                      </button> 
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleCheckQuestionAsAnswered(question.id)
+                        }
+                      >
+                        <img src={CheckImg} alt="Marcar Pergunta" />
+                      </button>
 
                       {/* <button
                         name="DarDestaque"
@@ -208,13 +151,9 @@ export function AdminRoom() {
                         <img src={answerImg} alt="Dar Destaque" />
                       </button> */}
 
-                      <button
-                        name="DarDestaque"
-                        type="button"
-                        onClick={ () => handleClickInside() }
-                      >
-                        <img src={ answerImg } alt="Dar Destaque" />
-                      </button>
+                  <Link to={`/admin/rooms/${roomId}/answer/${question.id}`}>
+                    <img src={answerImg} alt="Responder Pergunta" />
+                  </Link>
                     </>
                   )}
 
@@ -227,7 +166,7 @@ export function AdminRoom() {
 
                   <button
                     type="button"
-                    onClick={() => handleDeleteQuestion(question.id)}
+                    onClick={ () => handleDeleteQuestion(question.id) }
                   >
                     <img src={deleteImg} alt="Deletar Pergunta" />
                   </button>
