@@ -11,6 +11,7 @@ import {Button} from '../components/Button';
 import { database } from '../services/firebase';
 
 import '../styles/auth.scss';
+
 import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 

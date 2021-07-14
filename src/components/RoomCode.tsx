@@ -10,7 +10,7 @@ export function RoomCode(props: clipBoardProps) {
     // pegando id da sala para o clipboard.
     function copyRoomCodeToClipboard() {
         navigator.clipboard.writeText(props.code);
-        console.log(props.code)
+        console.log(props.code);
     }
 
   return (

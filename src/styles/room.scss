@@ -103,71 +103,13 @@
         }
       }
     }
+
     .question-list {
       margin-top: 32px;
       display: flex;
       flex-direction: column-reverse;
       box-shadow: 0 2px 12px rgb(211, 211, 211);
     }
-  }
-
-  .answer-container {
-    width: 100%;
-    height: 100vh;
-
-    display: flex;
-    margin: 0;
-    background: #f8f8f8;
-
-    position: fixed;
-    z-index: 9999;
-    overflow-y: scroll;
-
-    .answer-modal {
-      width: 800px;
-      height: auto;
-
-      margin: auto;
-
-      padding: 20px;
-      display: block;
-
-      justify-content: center;
-
-      background: white;
-    }
-
-    .answer-modal .question-list {
-      max-width: 700px;
-      margin: auto;
-      border-radius: 0px;
-      
-    }
     
-    .answer-modal button {
-      width: 700px;
-      display: flex;
-      margin: 0 auto;
-      border-radius: 2px;
-    }
-
-    .answer-modal textarea {
-      width: 100%;
-      max-width: 700px;
-      min-height: 130px;
-
-      margin: 30px auto;
-      display: flex;
-      border: 0;
-      padding: 16px;
-
-      border-radius: 1px;
-
-      background: #f0f0f0;
-      border-radius: 2px;
-      box-shadow: 0 2px 12px rgb(211, 211, 211);
-
-      resize: none;
-    }
   }
 }

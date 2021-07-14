@@ -132,12 +132,12 @@ export function Room() {
                 answers={question.answers}
               >
                
-                {!question.isAnswered && (
+                { !question.isAnswered && (
                   <button
                     className={`like-button ${question.likeId ? 'liked' : ''}`} 
                     type="button"
                     aria-label="Marcar como gostei"
-                    onClick={() => handleLikeQuestion(question.id, question.likeId)}
+                    onClick={ () => handleLikeQuestion( question.id, question.likeId ) }
                   >
                     { question.likeCount > 0 && <span> {question.likeCount} </span> }
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

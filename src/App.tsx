@@ -27,8 +27,7 @@ function App() {
       {/* acessando provider do context  */}
       <AuthContextProvider>
         <Routes />
-      </AuthContextProvider>
-          
+      </AuthContextProvider>          
     </div>
   );
 }

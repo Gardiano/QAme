@@ -74,11 +74,11 @@ export function AdminRoom() {
   //   });
   // }
 
-  // async function handleHighLightedQuestion(questionId: string) {
-  //   await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
-  //     isHighLighted: true,
-  //   });
-  // }
+  async function handleHighLightedQuestion(questionId: string) {
+    await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+      isHighLighted: true,
+    });
+  }
 
   const handleClickInside = () => {
     if ( isTrue === false ) {
@@ -132,37 +132,40 @@ export function AdminRoom() {
                   createdAt={question.createdAt}
                   answers={question.answers}
                 >
-                  {!question.isAnswered && (
+                { question.isAnswered === true ? (
+                  <>
+                    <Link to={`/admin/rooms/${roomId}/answer/${question.id}`}>
+                      <img src={answerImg} alt="Responder Pergunta" />
+                    </Link>
+
+                    <button type="button"
+                      onClick={ () => handleDeleteQuestion(question.id) }
+                    >
+                      <img src={deleteImg} alt="Deletar Pergunta" />
+                    </button>
+                  </>                    
+                  ) : (
                     <>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleCheckQuestionAsAnswered(question.id)
-                        }
-                      >
-                        <img src={CheckImg} alt="Marcar Pergunta" />
-                      </button>
+                    <button
+                      type="button"
+                      onClick={ () =>
+                        handleCheckQuestionAsAnswered(question.id)
+                      }
+                    >
+                      <img src={ CheckImg } alt="Marcar Pergunta" />
+                    </button>
 
-                      {/* <button
-                        name="DarDestaque"
-                        type="button"
-                        onClick={ () => handleHighLightedQuestion(question.id) }
-                      >
-                        <img src={answerImg} alt="Dar Destaque" />
-                      </button> */}
+                    <button
+                      name="DarDestaque"
+                      type="button"
+                      onClick={ () => handleHighLightedQuestion(question.id) }
+                    > Lida
+                      {/* <img src={answerImg} alt="Dar Destaque" /> como lida */}
+                    </button>
 
-                  <Link to={`/admin/rooms/${roomId}/answer/${question.id}`}>
-                    <img src={answerImg} alt="Responder Pergunta" />
-                  </Link>
-                    </>
-                  )}
-
-                  {/* <button
-                    type="button"
-                    onClick={() => handleAnswerQuestion(question.id)}
-                  >
-                    <img src={answerImg} alt="Deletar Pergunta" />
-                  </button> */}
+                    <Link to={`/admin/rooms/${roomId}/answer/${question.id}`}>
+                      <img src={answerImg} alt="Responder Pergunta" />
+                    </Link>
 
                   <button
                     type="button"
@@ -170,6 +173,15 @@ export function AdminRoom() {
                   >
                     <img src={deleteImg} alt="Deletar Pergunta" />
                   </button>
+                  </>
+                  )}
+
+                  {/* <button
+                    type="button"
+                    onClick={() => handleAnswerQuestion(question.id)}
+                  >
+                    <img src={answerImg} alt="Deletar Pergunta" />
+                  </button> */}                  
                 </Question>
               </>
             );
