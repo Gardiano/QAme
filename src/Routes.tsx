@@ -16,9 +16,11 @@ const Routes = () => (
 
       <Route exact path="/rooms/:id" component={Room} />
       
-      <Route exact path="/admin/rooms/:id" component={AdminRoom} />  
+      <Route exact path="/admin/rooms/:id" component={AdminRoom} />
+
+      <Route exact path="/admin/rooms/:id/answer/:questionId" component={Answers} /> 
       
-      <Route exact path="/admin/rooms/:id/answer/:questionId" component={Answers} />
+      <Route exact path="/rooms/:id/answer/:questionId" component={Answers} />      
     </Switch>
   </BrowserRouter>
 );

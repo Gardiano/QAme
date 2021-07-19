@@ -10,6 +10,9 @@ import deleteImg from "../assets/delete.svg";
 
 // import CheckImg from "../assets/check.svg";
 
+import answerFig from '../assets/ansFig.png';
+import interrogation from '../assets/inte.png';
+
 import { useRoom } from "../hooks/useRoom";
 
 import { database } from "../services/firebase";
@@ -124,7 +127,7 @@ export function Answers() {
     return item.replace( /\b(\w)/g, string => string.toUpperCase() );
   }
 
-  return (
+  return (    
     <div id="page-room">
       <header> 
           <div className="content">
@@ -140,42 +143,87 @@ export function Answers() {
 
       <div className="answer-container">
         <div className="answer-modal"> 
-            <div className="answer-list">
-              <p> { specificQuestion?.content || <Skeleton count={ 7 } height={ 25 } /> } </p>
+            <div className="question-list">
+                <p> { specificQuestion?.content || <Skeleton count={ 7 } height={ 25 } /> } </p>
               <footer>
                 <div className="user-info">
                   {specificQuestion?.author?.avatar ? (
-                  <img src={ `${specificQuestion?.author?.avatar}` } alt={ `${specificQuestion?.author?.name}`  } />  
+                    <img src={ `${specificQuestion?.author?.avatar}` } alt={ `${specificQuestion?.author?.name}`  } />  
                   ) : (
                      <Skeleton count={ 1 } height={ 35 } width={ 35 } circle={ true } /> 
                   )}
 
                   {specificQuestion?.author?.name ? (
-                  <span> { convertFirstCharacterAllWordsToUppercase( `${specificQuestion?.author?.name}` ) },</span>
+                    <span> { convertFirstCharacterAllWordsToUppercase( `${specificQuestion?.author?.name}` ) },</span>
                   ) : (
                     <Skeleton count={ 1 } height={ 25 } width={ 250 } />
                   )}
 
                   {specificQuestion?.createdAt ? (                  
-                  <span><Moment to={ specificQuestion.createdAt.toString() } />.</span>
+                    <span> <Moment to={ specificQuestion.createdAt.toString() } />.</span>
                   ) : (
-                     <Skeleton count={ 1 } height={ 25 } width={ 250 } /> 
+                     <Skeleton count={ 1 } height={ 25 } width={ 250 } />
                   )} 
                 </div>  
 
-                 { specificQuestion.content ? (
-                    <button 
+                    {/* <button 
                       id="answer-delete-question"
                       type="button"
                       onClick={ () => handleDeleteQuestion( questionId ) }
                     >
                       <img src={deleteImg} alt="Deletar Pergunta" />
-                    </button>
+                    </button> */}
+
+                 { specificQuestion.content ? (
+                    <>
+                      { specificQuestion.author.name === user?.name ? (
+                      <button 
+                         id="answer-delete-question"
+                         type="button"
+                         onClick={ () => handleDeleteQuestion( questionId ) }
+                       >
+                         <img src={deleteImg} alt="Deletar Pergunta" />
+                       </button>
+                      ) : (
+                        <div />)} 
+                    </>
                   ) : (
                     <div /> 
-                  )}     
-              </footer>                         
+                  )}
+              </footer>       
             </div>
+
+            
+           
+            {specificQuestion.answers ? (
+                <div className="answer-list">
+                  {specificQuestion.answers !== '' ? (
+                    <p> { specificQuestion?.answers } </p>
+                  ) : (
+                    <div />
+                  )}
+                  
+                  <footer>                   
+                    { specificQuestion?.answers !== '' ? (                      
+                      <>
+                      { specificQuestion.author.name === user?.name ? (
+                        <button 
+                          id="answer-delete-question"
+                          type="button"
+                          onClick={ () => handleDeleteQuestion( questionId ) }
+                        >
+                          <img src={deleteImg} alt="Deletar Pergunta" />
+                        </button>
+                      ) : (<div />)}
+                      </>
+                      ) : (
+                        <div /> 
+                      )}     
+                  </footer>                         
+                </div>
+              ) : (
+                <div />
+            )}
 
             <div className="answer-footer">
               { user ? (
@@ -190,29 +238,31 @@ export function Answers() {
             </div>  
 
             {/* onSubmit={handleAnswerQuestion as any} */}
-            <form>
-             <textarea
-                placeholder="Responder pergunta: "
-                onChange={ (e) => setAnswered( e.target.value ) }
-                value={ answered }
-              />
-
-              { user ? (
-                <Button
-                onClick={ (e) => handleAnswerQuestion( e, questionId ) }
-                type="submit"
-                disabled={ !user }
-              >
-                Enviar
-               </Button>               
-              ) : (
-                <Skeleton 
-                count={1}
-                width={700} 
-                height={50} 
-                style={{margin: 'auto', display:'block'}} />
-              )}
-          </form>
+            {specificQuestion?.author?.name === user?.name ? (
+              <form>
+                <textarea
+                  placeholder="Responder pergunta: "
+                  onChange={ (e) => setAnswered( e.target.value ) }
+                  value={ answered }
+                />
+  
+                { user ? (
+                  <Button
+                    onClick={ (e) => handleAnswerQuestion( e, questionId ) }
+                    type="submit"
+                    disabled={ !user }
+                >
+                  Enviar
+                  </Button>               
+                ) : (
+                  <Skeleton 
+                  count={1}
+                  width={700} 
+                  height={50} 
+                  style={{margin: 'auto', display:'block'}} />
+                )}
+              </form>
+            ) : ( <div />)}
         </div>
       </div>
     </div>

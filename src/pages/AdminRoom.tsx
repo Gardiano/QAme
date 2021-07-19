@@ -57,7 +57,7 @@ export function AdminRoom() {
   }
 
   async function handleDeleteQuestion(questionId: string) {
-    if (window.confirm("Excluir sua pergunta?")) {
+    if ( window.confirm("Excluir sua pergunta?") ) {
       await database.ref(`rooms/${roomId}/questions/${questionId}`).remove();
     }
   }
