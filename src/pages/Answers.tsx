@@ -8,6 +8,8 @@ import logoImg from "../assets/logo.svg";
 
 import deleteImg from "../assets/delete.svg";
 
+import endImg from "../assets/end.png";
+
 // import CheckImg from "../assets/check.svg";
 
 import answerFig from '../assets/ansFig.png';
@@ -29,6 +31,7 @@ import "moment/locale/pt-br";
 
 import "../styles/room.scss";
 import "../styles/answers.scss";
+import "../styles/responsiveness.scss";
 
 type RoomParams = {
   id: string;
@@ -135,7 +138,7 @@ export function Answers() {
               <div>
                 <RoomCode code={ roomId } />
                   <Button isOutLined onClick={ handleEndRoom }>
-                    Encerrar Sala
+                    <img className="endRoomImg" src={endImg} alt="Encerrar Sala" />
                   </Button>
               </div>
           </div>
@@ -164,15 +167,7 @@ export function Answers() {
                   ) : (
                      <Skeleton count={ 1 } height={ 25 } width={ 250 } />
                   )} 
-                </div>  
-
-                    {/* <button 
-                      id="answer-delete-question"
-                      type="button"
-                      onClick={ () => handleDeleteQuestion( questionId ) }
-                    >
-                      <img src={deleteImg} alt="Deletar Pergunta" />
-                    </button> */}
+                </div>
 
                  { specificQuestion.content ? (
                     <>
@@ -191,9 +186,7 @@ export function Answers() {
                     <div /> 
                   )}
               </footer>       
-            </div>
-
-            
+            </div>            
            
             {specificQuestion.answers ? (
                 <div className="answer-list">
@@ -247,13 +240,23 @@ export function Answers() {
                 />
   
                 { user ? (
+                 <>
+                 { answered ? (
                   <Button
-                    onClick={ (e) => handleAnswerQuestion( e, questionId ) }
-                    type="submit"
-                    disabled={ !user }
-                >
-                  Enviar
-                  </Button>               
+                      onClick={ (e) => handleAnswerQuestion( e, questionId ) }
+                      type="submit"
+                      disabled={ !user }
+                    >
+                    Enviar
+                  </Button> 
+                  ) : (
+                    <Button                      
+                      type="submit"
+                      disabled
+                    >
+                    Enviar
+                  </Button>)}
+                 </>              
                 ) : (
                   <Skeleton 
                   count={1}

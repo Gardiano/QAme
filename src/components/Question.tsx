@@ -3,6 +3,9 @@ import {ReactNode} from 'react';
 
 import cx from 'classnames';
 
+import Moment from "react-moment";
+import "moment/locale/pt-br";
+
 import '../styles/question.scss';
 
 type QuestionProps = {  
@@ -48,7 +51,7 @@ export function Question({
         <div className="user-info">
           <img src={author?.avatar} alt={author?.name} />          
           <span> { convertFirstCharacterAllWordsToUppercase(author?.name) } </span>
-          <span> { createdAt } </span>
+          <span> { <Moment to={ createdAt.toString() } /> } </span>
          {/* <p> { answers.answer } </p> */}
         </div>
 

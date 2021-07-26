@@ -12,7 +12,9 @@
 
   &.highlighted {
     background: #F4F0FF;
-    border: 1px solid #835afd;
+
+    // main color: 835afd;
+    border: 1px solid #283673;
     border-radius: 1px;
   }
 
@@ -51,6 +53,11 @@
     > div {
       display: flex;
       gap: 16px;
+
+      > a {
+        height: 25px;
+      }
+
     }
 
     button {
@@ -65,10 +72,11 @@
         gap: 8px;
 
         &.liked {
-          color: #835afd;
+          // main color: 835afd;
+          color: #278d62;
 
           svg path {
-            stroke: #835afd;
+            stroke: #278d62;
           }
         }
       }

@@ -1,3 +1,4 @@
+
 import { Link, useHistory, useParams } from "react-router-dom";
 
 import CheckImg from "../assets/check.svg";
@@ -5,14 +6,13 @@ import answerImg from "../assets/answer.svg";
 
 import logoImg from "../assets/logo.svg";
 import deleteImg from "../assets/delete.svg";
+import endImg from "../assets/end.png";
 
 import { Button } from "../components/Button";
 import { RoomCode } from "../components/RoomCode";
 import { Question } from "../components/Question";
 
 import { useRoom } from "../hooks/useRoom";
-
-import "../styles/room.scss";
 
 import { database } from "../services/firebase";
 import { useState } from "react";
@@ -21,6 +21,9 @@ import { useEffect } from "react";
 import { useRef } from "react";
 
 import useOnClickOutside from "../hooks/useOuterClick";
+
+import "../styles/room.scss";
+import "../styles/responsiveness.scss";
 
 type RoomParams = {
   id: string;
@@ -103,7 +106,7 @@ export function AdminRoom() {
           <div>
             <RoomCode code={roomId} />
             <Button isOutLined onClick={handleEndRoom}>
-              Encerrar Sala
+              <img className="endRoomImg" src={endImg} alt="Encerrar Sala" />
             </Button>
           </div>
         </div>
@@ -129,12 +132,13 @@ export function AdminRoom() {
                   author={question.author}
                   isAnswered={question.isAnswered}
                   isHighLighted={question.isHighLighted}
-                  createdAt={question.createdAt}
+                  createdAt={question.createdAt}                  
                   answers={question.answers}
                 >
                 { question.isAnswered === true ? (
                   <>
-                    <Link to={`/admin/rooms/${roomId}/answer/${question.id}`}>
+                    
+                    <Link to={`/admin/rooms/${roomId}/answer/${question.id}`} >
                       <img src={answerImg} alt="Responder Pergunta" />
                     </Link>
 

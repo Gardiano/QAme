@@ -4,13 +4,19 @@
   overflow: hidden;
 
   background: #fff;
-  border: 1px solid #835afd;
+
+  // main color: #835afd;  
+  border: 1px solid #283673;
+
   cursor: pointer;
   display: flex;
 
   div {
     height: 30px;
-    background: #835afd;
+
+     // main color: #835afd;
+     background: #283673;
+    
     padding: 0 12px;
     display: flex;
     justify-content: center;
@@ -28,4 +34,5 @@
     font-weight: 500;
     color: rgb(121, 118, 118);
   }
+
 }

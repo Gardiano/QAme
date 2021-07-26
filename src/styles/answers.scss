@@ -4,30 +4,28 @@
   max-width: 900px;
   height: auto;
 
-  margin: 0;
-  margin-bottom: 50px;
+  flex: 1;
+  margin: 10px auto 0px;
+  display: flex;
+  // margin-bottom: 200px;
 
   background: #f8f8f8;
-
-  flex: 1;
-
-  margin: auto;
-  display: flex;
 
   .answer-modal {
     width: 800px;
     height: auto;
 
-    margin: 2% auto;
+    margin: auto;
 
     flex: 1;
 
-    padding: 20px;
+    padding-top: 0px;
+    padding: 22px;
     display: flex;
 
     flex-direction: column;
 
-    background: white;
+    background: #f8f8f8;
 
     animation: go-back 1.5s;
   }
@@ -39,7 +37,8 @@
   }
 
   .answer-modal button {
-    width: 700px;
+    width: 100%;
+    max-width: 700px;
     display: flex;
     margin: 0 auto;
     border-radius: 2px;
@@ -53,8 +52,9 @@
     flex: 1;
 
     margin: 30px auto;
-    display: flex;
+    display: block;
     border: 0;
+    
     padding: 16px;
 
     border-radius: 1px;
@@ -62,8 +62,14 @@
     background: #f0f0f0;
     border-radius: 2px;
     box-shadow: 0 2px 12px rgb(211, 211, 211);
+    box-shadow: 0 4px 12px  #737380;
 
     resize: none;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
   }
 
   .question-list {
@@ -92,13 +98,12 @@
 
     // background-position: top right;
 
-    border: 3px solid #835afd;
-   
+    border: 3px solid #7b86b8;  
 
     // animation: go-back 3s;
   }
 
-  .answer-list {
+.answer-list {
     background: #fefefe;
     border-radius: 1px;
     box-shadow: 0 2px 12px rgb(211, 211, 211);
@@ -110,21 +115,21 @@
 
     flex: 1;
 
-    margin: 16px auto;
-    display: flex;
-   
+    margin: 22px auto;
+    display: flex;   
 
     flex-direction: column;
 
     border-radius: 3px;
     border: 1px solid grey; 
 
-    // background-image: url('../assets/ansFig.png');
-    // background-size:  30px 30px;
-    // background-repeat: no-repeat;
-    // background-position: top right;
+    background-image: url('../assets/ansFig.png');
+    background-size:  30px 30px;
+    background-repeat: no-repeat;
+    background-position: top right;
+    background-position-y: 5px;
 
-    border: 3px solid rgb(105, 195, 105);
+    border: 3px solid #278d62;
   }
  
   #answer-delete-question {

@@ -71,12 +71,12 @@ return (
     <aside>
         <img src={illustrationImg} alt="Q&amp;A" />
         <strong> Crie salas de Q&amp;A </strong>
-        <p>Tire as dúvidas de sua audiência em tempo real</p>
+        <p> Tire as dúvidas de sua audiência em tempo real. </p>
     </aside>
 
     <main>
         <div className="main-content">
-          <img src={logoImg} alt=""/>
+          <img src={logoImg} alt="headerLogo" title="logo" />
           <button className="create-room" onClick={handleCreateNewRoom}>
               <img src={googleIconImg} alt="" />
               Crie sua sala com o Google

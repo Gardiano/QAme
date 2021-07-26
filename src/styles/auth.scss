@@ -6,8 +6,8 @@ height: 100vh;
 
 aside {
 flex: 7;
-
-background: #835afd;
+// main color : #835afd
+background: #283673;
 color: #fff;
 
 display: flex;
@@ -90,7 +90,13 @@ form {
     height: 50px;
     border-radius: 8px;
     font-weight: 500;
+
+    // main color: #ea4335
+
     background: #ea4335;
+
+    background: #d74242;
+
     color: #fff;
 
     display: flex;
@@ -110,9 +116,7 @@ form {
         filter: brightness(0,9);
     }
 
-  }  
-   
-    
+  }     
     
 .separator {
     font-size: 14px;
@@ -122,19 +126,19 @@ form {
     align-items: center;
 
     &::before {
-        content: '';
-        flex:1;
-        height: 1px;
-        background: #a8a8b3;
-        margin-right: 16px;
+    content: '';
+    flex:1;
+    height: 1px;
+    background: #a8a8b3;
+    margin-right: 16px;
     }
 
     &::after {
-        content: '';
-        flex:1;
-        height: 1px;
-        background: #a8a8b3;
-        margin-left: 16px;
+    content: '';
+    flex:1;
+    height: 1px;
+    background: #a8a8b3;
+    margin-left: 16px;
     }
 }
 }
