@@ -9,16 +9,18 @@ import googleIconImg from '../assets/google-icon.svg';
 
 import Button from '../components/Button';
 
-import '../styles/auth.scss';
 import { useState } from 'react';
 import { database } from '../services/firebase';
 import { useAuth } from '../hooks/useAuth';
+
+import '../styles/responsiveness.scss';
+import '../styles/auth.scss';
 
 export function Home() {
   // acessando rotas
   const history = useHistory();
   const { user, signInWithGoogle } = useAuth();
-  const [roomCode, setRoomCode] = useState('');
+  const [ roomCode, setRoomCode ] = useState('');
  
   async function handleCreateNewRoom() {    
     // verificando se existe um usuario;
@@ -69,16 +71,16 @@ async function handleJoinRoom(e: FormEvent) {
 return (
   <div id="page-auth-container">
     <aside>
-        <img src={illustrationImg} alt="Q&amp;A" />
+        <img src={ illustrationImg } alt="Q&amp;A" />
         <strong> Crie salas de Q&amp;A </strong>
         <p> Tire as dúvidas de sua audiência em tempo real. </p>
     </aside>
 
     <main>
         <div className="main-content">
-          <img src={logoImg} alt="headerLogo" title="logo" />
-          <button className="create-room" onClick={handleCreateNewRoom}>
-              <img src={googleIconImg} alt="" />
+          <img src={ logoImg } alt="headerLogo" title="logo" />
+          <button className="create-room" onClick={ handleCreateNewRoom }>
+              <img src={ googleIconImg } alt="" />
               Crie sua sala com o Google
           </button>
           
@@ -87,11 +89,12 @@ return (
           <form onSubmit={handleJoinRoom}>
               <input 
                   type="text"
-                  onChange={e => setRoomCode(e.target.value)}
-                  value={roomCode}
+                  onChange={ e => setRoomCode(e.target.value) }
+                  value={ roomCode }
               />
+
               <Button type="submit">
-                  Entrar na sala
+                Entrar na sala
               </Button>
           </form>
         </div>
