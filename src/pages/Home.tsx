@@ -13,6 +13,8 @@ import { useState } from 'react';
 import { database } from '../services/firebase';
 import { useAuth } from '../hooks/useAuth';
 
+import { ToastContainer, toast } from 'react-toast';
+
 import '../styles/responsiveness.scss';
 import '../styles/auth.scss';
 
@@ -21,6 +23,14 @@ export function Home() {
   const history = useHistory();
   const { user, signInWithGoogle } = useAuth();
   const [ roomCode, setRoomCode ] = useState('');
+
+  const nonExistentRoom = () => toast.warn('SALA INEXISTENTE', { 
+    backgroundColor: '#693db1', color: 'white',
+  });
+
+  const errorRoom = () => toast.error('SALA ENCERRADA', { 
+    backgroundColor: '#d74242', color: 'white'
+  });
  
   async function handleCreateNewRoom() {    
     // verificando se existe um usuario;
@@ -35,6 +45,7 @@ async function handleJoinRoom(e: FormEvent) {
   e.preventDefault();
   // verificando se há 'espaços' no input;
   if( roomCode.trim() === '' ) {
+    nonExistentRoom();
     return;
   }
 
@@ -47,13 +58,13 @@ async function handleJoinRoom(e: FormEvent) {
   }
 
   // verificando se a sala existe;
-  if( !roomRef.exists() ) {   
-    alert('sala não existente!');
+  if( !roomRef.exists() ) { 
+    nonExistentRoom()
     return;
   }
 
   if( roomRef.val().endedAt ) {
-    alert('Essa sala foi encerrada recentemente.');    
+    errorRoom();    
     return;
   }
 
@@ -96,6 +107,10 @@ return (
               <Button type="submit">
                 Entrar na sala
               </Button>
+
+              <ToastContainer             
+                position={ 'top-center' } 
+                delay={ 5000 } />                
           </form>
         </div>
     </main>

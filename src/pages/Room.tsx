@@ -115,9 +115,11 @@ export function Room() {
                 <button onClick={ signInWithGoogle }>faça seu login</button>.
               </span>
             )}
+
             <Button type="submit" disabled={!user}>
-              Enviar pergunta
+              Enviar
             </Button>
+
           </div>
         </form>
 

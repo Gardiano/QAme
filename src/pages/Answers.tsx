@@ -169,7 +169,7 @@ export function Answers() {
                   )} 
                 </div>
 
-                 { specificQuestion.content ? (
+                 { specificQuestion?.content ? (
                     <>
                       { specificQuestion.author.name === user?.name ? (
                       <button 
@@ -188,9 +188,9 @@ export function Answers() {
               </footer>       
             </div>            
            
-            {specificQuestion.answers ? (
+            {specificQuestion?.answers ? (
                 <div className="answer-list">
-                  {specificQuestion.answers !== '' ? (
+                  {specificQuestion?.answers !== '' ? (
                     <p> { specificQuestion?.answers } </p>
                   ) : (
                     <div />
@@ -199,7 +199,7 @@ export function Answers() {
                   <footer>                   
                     { specificQuestion?.answers !== '' ? (                      
                       <>
-                      { specificQuestion.author.name === user?.name ? (
+                      { specificQuestion?.author?.name === user?.name ? (
                         <button 
                           id="answer-delete-question"
                           type="button"

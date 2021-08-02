@@ -62,7 +62,8 @@ export function AdminRoom() {
   async function handleDeleteQuestion(questionId: string) {
     if ( window.confirm("Excluir sua pergunta?") ) {
       await database.ref(`rooms/${roomId}/questions/${questionId}`).remove();
-    }
+      history.push(`/admin/rooms/${roomId}`);
+    }    
   }
 
   async function handleCheckQuestionAsAnswered(questionId: string) {
@@ -102,12 +103,12 @@ export function AdminRoom() {
     <div id="page-room">
       <header>
         <div className="content">
-          <img src={logoImg} alt="askm" />
+          <img src={ logoImg } alt="askm" />
           <div>
-            <RoomCode code={roomId} />
-            <Button isOutLined onClick={handleEndRoom}>
-              <img className="endRoomImg" src={endImg} alt="Encerrar Sala" />
-            </Button>
+            <RoomCode code={ roomId } />
+              <Button isOutLined onClick={handleEndRoom}>
+                <img className="endRoomImg" src={ endImg } alt="Encerrar Sala" />
+              </Button>
           </div>
         </div>
       </header>
