@@ -32,6 +32,7 @@ import "moment/locale/pt-br";
 import "../styles/room.scss";
 import "../styles/answers.scss";
 import "../styles/responsiveness.scss";
+import BackButton from "../components/backButton";
 
 type RoomParams = {
   id: string;
@@ -116,13 +117,18 @@ export function Answers() {
         isAnswered: true
       });
       setAnswered('');
-    // history.push(`/admin/rooms/${roomId}`);
   }
 
   async function handleDeleteQuestion(questionId: string) {
-    if ( window.confirm("Excluir sua pergunta?") ) {
+    if ( window.confirm( "Excluir sua pergunta?" ) ) {
       await database.ref(`rooms/${roomId}/questions/${questionId}`).remove();
        history.push(`/admin/rooms/${roomId}`);
+    }
+  }
+
+  async function handleDeleteAnswer(questionId: string) {
+    if ( window.confirm( "Excluir sua resposta?" ) ) {
+      await database.ref(`rooms/${roomId}/questions/${questionId}/answers`).remove();       
     }
   }
 
@@ -177,7 +183,7 @@ export function Answers() {
                          type="button"
                          onClick={ () => handleDeleteQuestion( questionId ) }
                        >
-                         <img src={deleteImg} alt="Deletar Pergunta" />
+                         <img src={ deleteImg } alt="Deletar Pergunta" />
                        </button>
                       ) : (
                         <div />)} 
@@ -203,9 +209,9 @@ export function Answers() {
                         <button 
                           id="answer-delete-question"
                           type="button"
-                          onClick={ () => handleDeleteQuestion( questionId ) }
+                          onClick={ () => handleDeleteAnswer( questionId ) }
                         >
-                          <img src={deleteImg} alt="Deletar Pergunta" />
+                          <img src={ deleteImg } alt="Deletar Pergunta" /> 
                         </button>
                       ) : (<div />)}
                       </>
@@ -230,7 +236,6 @@ export function Answers() {
               )}                
             </div>  
 
-            {/* onSubmit={handleAnswerQuestion as any} */}
             {specificQuestion?.author?.name === user?.name ? (
               <form>
                 <textarea
@@ -268,6 +273,7 @@ export function Answers() {
             ) : ( <div />)}
         </div>
       </div>
+      <> <BackButton /> </>
     </div>
   );
 }

@@ -24,6 +24,7 @@ import useOnClickOutside from "../hooks/useOuterClick";
 
 import "../styles/room.scss";
 import "../styles/responsiveness.scss";
+import BackButton from "../components/backButton";
 
 type RoomParams = {
   id: string;
@@ -153,6 +154,7 @@ export function AdminRoom() {
                     <>
                     <button
                       type="button"
+                      title="Pergunta respondida"
                       onClick={ () =>
                         handleCheckQuestionAsAnswered(question.id)
                       }
@@ -163,17 +165,19 @@ export function AdminRoom() {
                     <button
                       name="DarDestaque"
                       type="button"
+                      title="Marcado como lida"
                       onClick={ () => handleHighLightedQuestion(question.id) }
-                    > Lida
+                    > <i className="far fa-eye"> </i>
                       {/* <img src={answerImg} alt="Dar Destaque" /> como lida */}
                     </button>
 
-                    <Link to={`/admin/rooms/${roomId}/answer/${question.id}`}>
+                    <Link to={`/admin/rooms/${roomId}/answer/${question.id}`} title="Resposta">
                       <img src={answerImg} alt="Responder Pergunta" />
                     </Link>
 
                   <button
                     type="button"
+                    title="Deletar pergunta"
                     onClick={ () => handleDeleteQuestion(question.id) }
                   >
                     <img src={deleteImg} alt="Deletar Pergunta" />
@@ -192,6 +196,9 @@ export function AdminRoom() {
             );
           })}
         </div>
+        <>
+          <BackButton/>
+        </>
       </main>
     </div>
   );

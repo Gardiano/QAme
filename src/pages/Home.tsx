@@ -17,6 +17,7 @@ import { ToastContainer, toast } from 'react-toast';
 
 import '../styles/responsiveness.scss';
 import '../styles/auth.scss';
+import BackButton from '../components/backButton';
 
 export function Home() {
   // acessando rotas
@@ -97,7 +98,7 @@ return (
           
           <div className="separator"> ou entre em uma sala </div>
 
-          <form onSubmit={handleJoinRoom}>
+          <form onSubmit={ handleJoinRoom }>
               <input 
                   type="text"
                   onChange={ e => setRoomCode(e.target.value) }

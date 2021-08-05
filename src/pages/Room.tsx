@@ -17,6 +17,7 @@ import { useAuth } from "../hooks/useAuth";
 
 import "../styles/room.scss";
 import "../styles/responsiveness.scss";
+import BackButton from "../components/backButton";
 
 type RoomParams = {
   id: string;
@@ -199,6 +200,9 @@ export function Room() {
             );
           })}
         </div>
+        <>
+          <BackButton />
+        </>
       </main>
     </div>
   );

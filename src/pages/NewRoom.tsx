@@ -16,6 +16,7 @@ import { useAuth } from '../hooks/useAuth';
 import { ToastContainer, toast } from 'react-toast';
 
 import '../styles/auth.scss';
+import BackButton from '../components/backButton';
 
 export function NewRoom() {
 
@@ -78,6 +79,9 @@ async function handleCreateNewRoom(e: FormEvent) {
                 </form>
                 <p> Quer entrar em uma sala existente ? <Link to={"/"}> Clique aqui </Link> </p>
           </div>
+          <>
+            <BackButton/> 
+          </>
       </main>
     </div>
   );
