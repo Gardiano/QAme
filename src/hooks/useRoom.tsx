@@ -48,7 +48,7 @@ export function useRoom(roomId: string) {
 
     const { user } = useAuth();
     const [questions, setQuestions] = useState<QuestionProps[]>([]);
-    const [title, setTitle] = useState("");
+    const [title, setTitle] = useState('');
 
     useEffect(() => {
         const roomRef = database.ref(`rooms/${roomId}`);      

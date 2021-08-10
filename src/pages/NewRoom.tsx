@@ -69,8 +69,9 @@ async function handleCreateNewRoom(e: FormEvent) {
                         onChange={ e => setNewRoom(e.target.value) }
                         value={ newRoom }
                     />
+
                     <Button type="submit">
-                        Criar sala
+                      Criar sala
                     </Button>   
 
                     <ToastContainer 

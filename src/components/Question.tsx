@@ -28,7 +28,6 @@ type QuestionProps = {
 export function Question({ 
    content,
    author,
-   answers,
    createdAt,
    isAnswered = false, 
    isHighLighted = false,  
@@ -46,13 +45,12 @@ export function Question({
     { highlighted: isHighLighted && !isAnswered },
     )}
   >
-      <p> {content} </p>
+      <p> { content } </p>
       <footer>
         <div className="user-info">
-          <img src={author?.avatar} alt={author?.name} />          
-          <span> { convertFirstCharacterAllWordsToUppercase(author?.name) } </span>
+          <img src={ author?.avatar } alt={ author?.name } />          
+          <span> { convertFirstCharacterAllWordsToUppercase( author?.name ) } </span>
           <span> { <Moment to={ createdAt.toString() } /> } </span>
-         {/* <p> { answers.answer } </p> */}
         </div>
 
         <div>            

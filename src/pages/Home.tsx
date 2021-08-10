@@ -17,7 +17,6 @@ import { ToastContainer, toast } from 'react-toast';
 
 import '../styles/responsiveness.scss';
 import '../styles/auth.scss';
-import BackButton from '../components/backButton';
 
 export function Home() {
   // acessando rotas
@@ -60,12 +59,14 @@ async function handleJoinRoom(e: FormEvent) {
 
   // verificando se a sala existe;
   if( !roomRef.exists() ) { 
-    nonExistentRoom()
+    nonExistentRoom();
+    setRoomCode('');
     return;
   }
 
   if( roomRef.val().endedAt ) {
-    errorRoom();    
+    errorRoom();
+    setRoomCode('');  
     return;
   }
 
@@ -91,10 +92,10 @@ return (
     <main>
         <div className="main-content">
           <img src={ logoImg } alt="headerLogo" title="logo" />
-          <button className="create-room" onClick={ handleCreateNewRoom }>
-              <img src={ googleIconImg } alt="" />
-              Crie sua sala com o Google
-          </button>
+            <button className="create-room" onClick={ handleCreateNewRoom }>
+                <img src={ googleIconImg } alt="" />
+                Crie sua sala com o Google
+            </button>
           
           <div className="separator"> ou entre em uma sala </div>
 

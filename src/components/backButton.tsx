@@ -1,5 +1,4 @@
 
-import { ButtonHTMLAttributes } from 'react';
 
 import { useHistory } from "react-router-dom";
 

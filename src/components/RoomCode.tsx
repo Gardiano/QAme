@@ -5,20 +5,20 @@ type clipBoardProps = {
     code: string;
 }
 
-export function RoomCode(props: clipBoardProps) {
+export function RoomCode( props: clipBoardProps ) {
 
     // pegando id da sala para o clipboard.
     function copyRoomCodeToClipboard() {
-        navigator.clipboard.writeText(props.code);
-        console.log(props.code);
+        navigator.clipboard.writeText( props.code );
+        console.log( props.code );
     }
 
   return (
     <button className="room-code" onClick={copyRoomCodeToClipboard}>
       <div>
-        <img src={copyImg} alt="code" />        
+        <img src={ copyImg } alt="code" />        
       </div>
-      <span>SALA: {props.code} </span>
+      <span>SALA: { props.code } </span>
     </button>
   );
 }

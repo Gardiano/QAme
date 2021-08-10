@@ -87,7 +87,7 @@ form {
 
 
     .create-room {
-    margin-top: 64px;
+    margin-top: 30px;
     height: 50px;
     border-radius: 8px;
     font-weight: 500;
@@ -140,4 +140,35 @@ form {
     margin-left: 16px;
     }
 }
+
+// .pulsate {
+
+//     color: #283673;
+
+//     animation: pulsate 3s ease-out;
+//     -webkit-animation: pulsate 3s ease-out;
+
+//     animation-iteration-count: infinite;
+//     -webkit-animation-iteration-count: infinite; 
+    
+//     opacity: 0.5;
+
+//     // font: 700 28px "Roboto", sans-serif;
+//     // font-family: 'Poppins', sans-serif;
+//     // font-family: 'Roboto', sans-serif;
+//     font: 500 36px 'Permanent Marker', cursive;
+// }
+
+// @keyframes pulsate {
+//     0% { 
+//         opacity: 0.5;
+//     }
+//     50% { 
+//         opacity: 1.0;
+//     }
+//     100% { 
+//         opacity: 0.5;
+//     }
+// }
+
 }

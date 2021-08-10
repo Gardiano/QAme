@@ -12,8 +12,8 @@ import endImg from "../assets/end.png";
 
 // import CheckImg from "../assets/check.svg";
 
-import answerFig from '../assets/ansFig.png';
-import interrogation from '../assets/inte.png';
+// import answerFig from '../assets/ansFig.png';
+// import interrogation from '../assets/inte.png';
 
 import { useRoom } from "../hooks/useRoom";
 

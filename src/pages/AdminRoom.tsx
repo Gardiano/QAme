@@ -1,30 +1,33 @@
 
+import { useState } from "react";
+import { useEffect } from "react";
+import { useRef } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 
 import CheckImg from "../assets/check.svg";
 import answerImg from "../assets/answer.svg";
-
 import logoImg from "../assets/logo.svg";
 import deleteImg from "../assets/delete.svg";
 import endImg from "../assets/end.png";
+import fig from '../assets/empty-questions.svg';
 
 import { Button } from "../components/Button";
 import { RoomCode } from "../components/RoomCode";
 import { Question } from "../components/Question";
+import BackButton from "../components/backButton";
 
+import { useAuth } from "../hooks/useAuth";
 import { useRoom } from "../hooks/useRoom";
 
 import { database } from "../services/firebase";
-import { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
-import { useEffect } from "react";
-import { useRef } from "react";
 
 import useOnClickOutside from "../hooks/useOuterClick";
 
 import "../styles/room.scss";
 import "../styles/responsiveness.scss";
-import BackButton from "../components/backButton";
+import "../styles/modal.scss";
+
+import Modal from "../components/modal";
 
 type RoomParams = {
   id: string;
@@ -45,15 +48,11 @@ export function AdminRoom() {
   // hook
   const { title, questions } = useRoom(roomId);
 
-  const [isTrue, setIsTrue] = useState<boolean>(false);
-
-  // const [answered, setAnswered] = useState<string>();
-
-  // const [answeredArray, setAnsweredArray] = useState<any[]>([]);
+  const [ isTrue, setIsTrue ] = useState<boolean>(false);
 
   useEffect( () => {
 
-  }, [roomId] );
+  }, [ roomId ] );
 
   async function handleEndRoom() {
     database.ref(`rooms/${roomId}`).update({ endedAt: new Date() });
@@ -61,7 +60,7 @@ export function AdminRoom() {
   }
 
   async function handleDeleteQuestion(questionId: string) {
-    if ( window.confirm("Excluir sua pergunta?") ) {
+    if ( window.confirm( "Excluir sua pergunta?" ) ) {
       await database.ref(`rooms/${roomId}/questions/${questionId}`).remove();
       history.push(`/admin/rooms/${roomId}`);
     }    
@@ -87,27 +86,32 @@ export function AdminRoom() {
 
   const handleClickInside = () => {
     if ( isTrue === false ) {
-      setIsTrue(true);
+      setIsTrue( true );
+      setTimeout(() =>{console.log('IsTrue after setState', isTrue);}, 3000)
+      return;
     }
   };
 
   const handleClickOutside = () => {
     if ( isTrue === true ) {
-      setIsTrue(false);
+      setIsTrue( false );
+      return;
     }
   };
+
 
   // inserindo node no DOM
   useOnClickOutside( ref, handleClickOutside );
 
-  return (
-    <div id="page-room">
-      <header>
+  return (   
+ <div id="page-room">
+    { isTrue && <Modal children reff={ref} /> }
+     <header>
         <div className="content">
           <img src={ logoImg } alt="askm" />
           <div>
             <RoomCode code={ roomId } />
-              <Button isOutLined onClick={handleEndRoom}>
+              <Button isOutLined onClick={ handleEndRoom }>
                 <img className="endRoomImg" src={ endImg } alt="Encerrar Sala" />
               </Button>
           </div>
@@ -138,16 +142,14 @@ export function AdminRoom() {
                   answers={question.answers}
                 >
                 { question.isAnswered === true ? (
-                  <>
-                    
+                  <>                    
                     <Link to={`/admin/rooms/${roomId}/answer/${question.id}`} >
-                      <img src={answerImg} alt="Responder Pergunta" />
+                      <img src={ answerImg } alt="Responder Pergunta" />
                     </Link>
 
                     <button type="button"
-                      onClick={ () => handleDeleteQuestion(question.id) }
-                    >
-                      <img src={deleteImg} alt="Deletar Pergunta" />
+                      onClick={ () => handleClickInside() }>
+                      <img src={ deleteImg } alt="Deletar Pergunta" />
                     </button>
                   </>                    
                   ) : (
@@ -183,23 +185,14 @@ export function AdminRoom() {
                     <img src={deleteImg} alt="Deletar Pergunta" />
                   </button>
                   </>
-                  )}
-
-                  {/* <button
-                    type="button"
-                    onClick={() => handleAnswerQuestion(question.id)}
-                  >
-                    <img src={answerImg} alt="Deletar Pergunta" />
-                  </button> */}                  
+                  )}                
                 </Question>
               </>
             );
           })}
         </div>
-        <>
-          <BackButton/>
-        </>
-      </main>
+        <> <BackButton/> </>           
+      </main>        
     </div>
   );
 }

@@ -27,10 +27,10 @@ export const AuthContext = createContext( {} as AuthContextTypes );
 // Exportando provider do context
 export function AuthContextProvider( props: AuthContextProviderProps ) {
 
-    const [user, setUser] = useState<UserProps>();
+    const [ user, setUser ] = useState<UserProps>();
 
     // salvando dados de usuario após login;
-    useEffect(() => {
+    useEffect( () => {
       // onAuthStateChanged = listener para verificar se tem usuario logado;
      const unsubscribe = auth.onAuthStateChanged(user => {
         if( user ) {
@@ -61,7 +61,7 @@ export function AuthContextProvider( props: AuthContextProviderProps ) {
       
       const res = await auth.signInWithPopup(provider);
   
-          if(res.user) {
+          if( res.user ) {
             // info do usuário;
             const { displayName, photoURL, uid } = res.user;
   
@@ -78,8 +78,8 @@ export function AuthContextProvider( props: AuthContextProviderProps ) {
   }
     
     return (
-        <AuthContext.Provider value ={ {user, signInWithGoogle} }>
-            {props.children}
+        <AuthContext.Provider value ={ { user, signInWithGoogle } }>
+            { props.children }
         </AuthContext.Provider>
     );
 };
