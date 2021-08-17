@@ -1,5 +1,5 @@
 
-import { ReactNode, RefAttributes, useRef, useState } from "react";
+import { ReactNode } from "react";
 import { Ref } from "react";
 
 import { useHistory, useParams } from "react-router-dom";
@@ -10,9 +10,11 @@ import deleteFig from '../assets/delete.svg';
 import { useRoom } from "../hooks/useRoom";
 import { database } from "../services/firebase";
 
-import '../styles/modal.scss';
+import { useModal } from "../hooks/useModal";
 
-import useOnClickOutside from "../hooks/useOuterClick";
+import '../styles/modal.scss';
+import { useEffect } from "react";
+import { useState } from "react";
 
 type modalProps = {  
     children: ReactNode
@@ -33,8 +35,11 @@ export function Modal( { reff, children } : modalProps) {
   const params = useParams<RoomParams>();
   const roomId = params.id;
 
-  // hook
-  const { questions } = useRoom(roomId);
+  const { isTrue, handleCloseModal } = useModal();
+
+  const [answerId, setAnswerId] = useState('');
+
+  const { questions } = useRoom( roomId );
 
   async function handleDeleteQuestion( questionId: string ) {
     if ( window.confirm( " Excluir sua pergunta? " ) ) {
@@ -44,31 +49,38 @@ export function Modal( { reff, children } : modalProps) {
   }
 
   return (
-       <div id="modalContainer">
-        <div className="modal" ref={reff}>            
+    <>   
+      {isTrue === true ? (
+        <div id="modalContainer">
+        <div className="modal" ref={ reff }>            
             <div className="separatorDiv">
-                <img id="separatorFig" src={ fig } alt="" title="fig" />   
+                <img id="separatorFig" src={ fig } alt="" title="fig" />
 
                 <div className="modalContent">                       
                   <p> Tem certeza que deseja deletar essa pergunta ? </p>
                 </div>
                 
                 <div className="modalButtons">                 
-                  <div className="quit"> Voltar </div>
-                    { questions.map( ( question ) => {
+                  <button className="quit"  onClick={ () => handleCloseModal() }> Voltar </button>
+                  <button onClick={() => handleDeleteQuestion( answerId )}> del </button>
+
+                    {/* { questions.map( ( question ) => {
                       return (
                         <>
-                        <button className="delete" onClick={ () => handleDeleteQuestion( question.id ) }> 
-                          <img src={ deleteFig } alt="" title="delete" /> 
-                        </button>
+                         <button className="delete" onClick={ () => handleDeleteQuestion( question.id ) }> 
+                           <img src={ deleteFig } alt="" title="delete" /> 
+                         </button>
                         </>
                       )
-                    })}
+                    })} */}
+                    
                 </div>       
             </div>
-        </div>
-         <> { children } </>
-     </div>
+         </div>
+           <> { children } </>
+       </div>  
+      ) : (<div>teste!</div>)}
+    </>
   );
 };
 

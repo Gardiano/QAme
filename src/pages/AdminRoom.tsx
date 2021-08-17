@@ -1,5 +1,4 @@
 
-import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
@@ -9,14 +8,14 @@ import answerImg from "../assets/answer.svg";
 import logoImg from "../assets/logo.svg";
 import deleteImg from "../assets/delete.svg";
 import endImg from "../assets/end.png";
-import fig from '../assets/empty-questions.svg';
+// import fig from '../assets/empty-questions.svg';
 
 import { Button } from "../components/Button";
 import { RoomCode } from "../components/RoomCode";
 import { Question } from "../components/Question";
 import BackButton from "../components/backButton";
 
-import { useAuth } from "../hooks/useAuth";
+// import { useAuth } from "../hooks/useAuth";
 import { useRoom } from "../hooks/useRoom";
 
 import { database } from "../services/firebase";
@@ -28,17 +27,21 @@ import "../styles/responsiveness.scss";
 import "../styles/modal.scss";
 
 import Modal from "../components/modal";
+import { useModal } from "../hooks/useModal";
 
 type RoomParams = {
   id: string;
 };
 
-// Entrando em sala criada.
+// Entrando em sala criada;
 export function AdminRoom() {
   const history = useHistory();
-  const { user, signInWithGoogle } = useAuth();
 
-  // pegando parametro de rota.
+  // Hooks chamando Contexts;
+  // const { user, signInWithGoogle } = useAuth();
+  const { isTrue, handleOpenModal, handleCloseModal } = useModal();
+
+  // pegando parametro de rota;
   const params = useParams<RoomParams>();
   const roomId = params.id;
 
@@ -46,9 +49,7 @@ export function AdminRoom() {
   const ref = useRef<HTMLDivElement>(null);
 
   // hook
-  const { title, questions } = useRoom(roomId);
-
-  const [ isTrue, setIsTrue ] = useState<boolean>(false);
+  const { title, questions } = useRoom( roomId );
 
   useEffect( () => {
 
@@ -59,12 +60,6 @@ export function AdminRoom() {
     history.push("/");
   }
 
-  async function handleDeleteQuestion(questionId: string) {
-    if ( window.confirm( "Excluir sua pergunta?" ) ) {
-      await database.ref(`rooms/${roomId}/questions/${questionId}`).remove();
-      history.push(`/admin/rooms/${roomId}`);
-    }    
-  }
 
   async function handleCheckQuestionAsAnswered(questionId: string) {
     await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
@@ -84,37 +79,21 @@ export function AdminRoom() {
     });
   }
 
-  const handleClickInside = () => {
-    if ( isTrue === false ) {
-      setIsTrue( true );
-      setTimeout(() =>{console.log('IsTrue after setState', isTrue);}, 3000)
-      return;
-    }
-  };
-
-  const handleClickOutside = () => {
-    if ( isTrue === true ) {
-      setIsTrue( false );
-      return;
-    }
-  };
-
-
-  // inserindo node no DOM
-  useOnClickOutside( ref, handleClickOutside );
+  // inserindo hook no DOM
+  useOnClickOutside( ref, handleCloseModal );
 
   return (   
  <div id="page-room">
-    { isTrue && <Modal children reff={ref} /> }
-     <header>
+    { isTrue === true && <Modal children reff={ ref } /> }
+      <header>
         <div className="content">
           <img src={ logoImg } alt="askm" />
-          <div>
-            <RoomCode code={ roomId } />
-              <Button isOutLined onClick={ handleEndRoom }>
-                <img className="endRoomImg" src={ endImg } alt="Encerrar Sala" />
-              </Button>
-          </div>
+            <div>
+              <RoomCode code={ roomId } />
+                <Button isOutLined onClick={ handleEndRoom }>
+                  <img className="endRoomImg" src={ endImg } alt="Encerrar Sala" />
+                </Button>
+            </div>
         </div>
       </header>
 
@@ -148,7 +127,7 @@ export function AdminRoom() {
                     </Link>
 
                     <button type="button"
-                      onClick={ () => handleClickInside() }>
+                      onClick={ () => handleOpenModal(question.id) }>
                       <img src={ deleteImg } alt="Deletar Pergunta" />
                     </button>
                   </>                    
@@ -158,7 +137,7 @@ export function AdminRoom() {
                       type="button"
                       title="Pergunta respondida"
                       onClick={ () =>
-                        handleCheckQuestionAsAnswered(question.id)
+                        handleCheckQuestionAsAnswered( question.id )
                       }
                     >
                       <img src={ CheckImg } alt="Marcar Pergunta" />
@@ -168,7 +147,7 @@ export function AdminRoom() {
                       name="DarDestaque"
                       type="button"
                       title="Marcado como lida"
-                      onClick={ () => handleHighLightedQuestion(question.id) }
+                      onClick={ () => handleHighLightedQuestion( question.id ) }
                     > <i className="far fa-eye"> </i>
                       {/* <img src={answerImg} alt="Dar Destaque" /> como lida */}
                     </button>
@@ -180,9 +159,9 @@ export function AdminRoom() {
                   <button
                     type="button"
                     title="Deletar pergunta"
-                    onClick={ () => handleDeleteQuestion(question.id) }
+                    onClick={ () => handleOpenModal( question.id ) }
                   >
-                    <img src={deleteImg} alt="Deletar Pergunta" />
+                    <img src={ deleteImg } alt="Deletar Pergunta" /> 
                   </button>
                   </>
                   )}                

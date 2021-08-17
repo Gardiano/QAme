@@ -7,9 +7,6 @@ import { Home } from "./pages/Home";
 import { NewRoom } from "./pages/NewRoom";
 import { Room } from "./pages/Room";
 
-import Modal from "./components/modal";
-
-
 const Routes = () => (
   <BrowserRouter>
   {/* switch - nao permite que duas rotas iguais sejam chamadas ao mesmo tempo. */}
