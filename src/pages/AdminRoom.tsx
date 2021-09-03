@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRef } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 
@@ -8,7 +8,7 @@ import answerImg from "../assets/answer.svg";
 import logoImg from "../assets/logo.svg";
 import deleteImg from "../assets/delete.svg";
 import endImg from "../assets/end.png";
-// import fig from '../assets/empty-questions.svg';
+import fig from '../assets/empty-questions.svg';
 
 import { Button } from "../components/Button";
 import { RoomCode } from "../components/RoomCode";
@@ -26,9 +26,6 @@ import "../styles/room.scss";
 import "../styles/responsiveness.scss";
 import "../styles/modal.scss";
 
-import Modal from "../components/modal";
-import { useModal } from "../hooks/useModal";
-
 type RoomParams = {
   id: string;
 };
@@ -39,7 +36,6 @@ export function AdminRoom() {
 
   // Hooks chamando Contexts;
   // const { user, signInWithGoogle } = useAuth();
-  const { isTrue, handleOpenModal, handleCloseModal } = useModal();
 
   // pegando parametro de rota;
   const params = useParams<RoomParams>();
@@ -51,17 +47,23 @@ export function AdminRoom() {
   // hook
   const { title, questions } = useRoom( roomId );
 
+  const [ isTrue, setIsTrue ] = useState<boolean>( false );
+
+  const [ uniqueId, setUniqueId] = useState<string>('null');
+
   useEffect( () => {
 
   }, [ roomId ] );
 
+  // inserindo hook no DOM
+  useOnClickOutside( ref, handleCloseModal );
+
   async function handleEndRoom() {
-    database.ref(`rooms/${roomId}`).update({ endedAt: new Date() });
-    history.push("/");
+    database.ref(`rooms/${roomId}`).update( { endedAt: new Date() } );
+    history.push('/');
   }
 
-
-  async function handleCheckQuestionAsAnswered(questionId: string) {
+  async function handleCheckQuestionAsAnswered( questionId: string ) {
     await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
       isAnswered: true,
     });
@@ -73,18 +75,39 @@ export function AdminRoom() {
   //   });
   // }
 
-  async function handleHighLightedQuestion(questionId: string) {
+  async function handleHighLightedQuestion( questionId: string ) {
     await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
       isHighLighted: true,
     });
   }
 
-  // inserindo hook no DOM
-  useOnClickOutside( ref, handleCloseModal );
+  async function handleDeleteQuestion() { 
+    try {  
+       if ( window.confirm( " Excluir sua pergunta? " ) ) {          
+         await database.ref(`rooms/${roomId}/questions/${uniqueId}`).remove(); 
+           handleCloseModal();
+     }
+    } catch ( err: any ) {
+      console.log( err );
+    }
+ }
 
-  return (   
- <div id="page-room">
-    { isTrue === true && <Modal children reff={ ref } /> }
+  function handleOpenModal( uId: string ) {
+    if ( isTrue === false ) {
+      let uniqueId = uId;
+      setUniqueId( uniqueId );   
+      setIsTrue( true );
+    }     
+  };
+
+  function handleCloseModal() {  
+    if ( isTrue === true ) {    
+      setIsTrue( false );
+    }    
+  };
+
+return (   
+  <div id="page-room"> 
       <header>
         <div className="content">
           <img src={ logoImg } alt="askm" />
@@ -108,11 +131,11 @@ export function AdminRoom() {
         </div>
 
         <div className="question-list">
-          { questions.map( (question) => {
+          { questions.map( ( question ) => {
             return (
               <>
-                <Question
-                  key={question.id}
+                <Question 
+                  key={question.id}                              
                   content={question.content}
                   author={question.author}
                   isAnswered={question.isAnswered}
@@ -120,20 +143,21 @@ export function AdminRoom() {
                   createdAt={question.createdAt}                  
                   answers={question.answers}
                 >
+
                 { question.isAnswered === true ? (
-                  <>                    
+                  <> 
                     <Link to={`/admin/rooms/${roomId}/answer/${question.id}`} >
                       <img src={ answerImg } alt="Responder Pergunta" />
                     </Link>
 
                     <button type="button"
-                      onClick={ () => handleOpenModal(question.id) }>
+                      onClick={ () => handleOpenModal( question.id ) } >
                       <img src={ deleteImg } alt="Deletar Pergunta" />
                     </button>
                   </>                    
                   ) : (
                     <>
-                    <button
+                    <button                      
                       type="button"
                       title="Pergunta respondida"
                       onClick={ () =>
@@ -153,18 +177,52 @@ export function AdminRoom() {
                     </button>
 
                     <Link to={`/admin/rooms/${roomId}/answer/${question.id}`} title="Resposta">
-                      <img src={answerImg} alt="Responder Pergunta" />
+                      <img src={ answerImg } alt="Responder Pergunta" />
                     </Link>
 
-                  <button
+                  <button                  
                     type="button"
                     title="Deletar pergunta"
                     onClick={ () => handleOpenModal( question.id ) }
                   >
-                    <img src={ deleteImg } alt="Deletar Pergunta" /> 
+                    <img src={ deleteImg } alt="Deletar Pergunta" />
                   </button>
-                  </>
-                  )}                
+
+                  { isTrue === true ? (
+                    <div id="modalContainer">
+                      <div className="modal" ref={ ref }>            
+                          <div className="separatorDiv">
+                            <img id="separatorFig" src={ fig } alt="" title="fig" />
+
+                            <div className="modalContent">                       
+                              <p> Tem certeza que deseja deletar essa pergunta ? </p>
+                            </div>
+                            
+                            <div className="modalButtons">  
+                              <button className="quit" onClick={ () => handleCloseModal() }> 
+                              <i className="fas fa-arrow-alt-circle-left" style={{fontSize:'20px'}}></i>
+                              </button>
+                              
+                              <button
+                                className="delete"
+                                type="button"
+                                title="Deletar pergunta"                                
+                                onClick={ () => handleDeleteQuestion() }
+                              >
+                                {/* <img src={ deleteImg } alt="Deletar Pergunta" />   */}
+                                 
+                                <i className="far fa-trash-alt" style={{fontSize:'20px'}}> </i>                        
+                              </button>                  
+                            </div>       
+                          </div>
+                      </div>
+                    </div>  
+                    ) : ( null ) } 
+
+                  </>                  
+                  )}
+
+                                 
                 </Question>
               </>
             );

@@ -16,7 +16,7 @@ type UserProps = {
   }
 
   type AuthContextProviderProps = {
-      children: ReactNode   
+      children: ReactNode
   }  
 
 //   Criando Context
@@ -30,7 +30,7 @@ export function AuthContextProvider( props: AuthContextProviderProps ) {
     // salvando dados de usuario após login;
     useEffect( () => {
       // onAuthStateChanged = listener para verificar se tem usuario logado;
-     const unsubscribe = auth.onAuthStateChanged(user => {
+     const unsubscribe = auth.onAuthStateChanged( user => {
         if( user ) {
             // info do usuário;
             const { displayName, photoURL, uid } = user;
@@ -72,15 +72,13 @@ export function AuthContextProvider( props: AuthContextProviderProps ) {
                 avatar: photoURL
               });
             }
+
           };
   }
     
     return (
-        <AuthContext.Provider value={{ 
-          user, 
-          signInWithGoogle,         
-          }}>            
-            { props.children }
-        </AuthContext.Provider>
+      <AuthContext.Provider value={ {  user, signInWithGoogle } }>            
+          { props.children }
+      </AuthContext.Provider>
     );
 };

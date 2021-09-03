@@ -13,7 +13,10 @@
       align-items: center;
       justify-content: center;
 
-      background: rgba(0, 0, 0, 0.7);
+      padding-left: 20px;
+      padding-right: 20px;
+
+      background: rgba(10, 10, 10, 0.8);
 
       z-index: 9999;
 
@@ -93,8 +96,10 @@
           }
 
           .delete {
+            background: rgb(194, 85, 85);;
             border: 1px solid rgb(194, 85, 85);
             cursor: pointer;
+            color: whitesmoke;
           }
         }
         z-index: 9999;
@@ -103,3 +108,5 @@
     }
   }
 }
+
+

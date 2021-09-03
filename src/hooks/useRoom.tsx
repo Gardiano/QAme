@@ -56,6 +56,7 @@ export function useRoom(roomId: string) {
         // Object.entries = retorna um array com propriedade e valor da propriedade.
         roomRef.on("value", (room) => {
           const databaseRoom = room.val();
+          
           const firebaseQuestions: FirebaseQuestions = databaseRoom.questions ?? {};
     
           const parsedQuestions = Object.entries( firebaseQuestions ).map(

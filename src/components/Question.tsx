@@ -8,7 +8,7 @@ import "moment/locale/pt-br";
 
 import '../styles/question.scss';
 
-type QuestionProps = {  
+type QuestionProps = {
   content: string;
   
   author: {
@@ -22,19 +22,19 @@ type QuestionProps = {
 
   createdAt: Date;
 
-  answers: string | undefined
+  answers: string | undefined  
 };
 
-export function Question({ 
+export function Question({
    content,
    author,
    createdAt,
    isAnswered = false, 
    isHighLighted = false,  
-   children } : QuestionProps) {   
-     
-    // Array.Prototype.Capitalize - transformar todos os primeiros caracteres das palavras em letras maiusculas.
-   function convertFirstCharacterAllWordsToUppercase(item: string) {
+   children } : QuestionProps ) {
+
+  // Array.Prototype.Capitalize - transformar todos os primeiros caracteres das palavras em letras maiusculas.
+   function convertFirstCharacterAllWordsToUppercase( item: string ) {
       return item?.replace( /\b(\w)/g, string => string?.toUpperCase() );
    }
    
@@ -48,6 +48,7 @@ export function Question({
       <p> { content } </p>
       <footer>
         <div className="user-info">
+
           <img src={ author?.avatar } alt={ author?.name } />          
           <span> { convertFirstCharacterAllWordsToUppercase( author?.name ) } </span>
           <span> { <Moment to={ createdAt.toString() } /> } </span>

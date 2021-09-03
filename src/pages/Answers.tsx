@@ -1,28 +1,25 @@
+import { useEffect, FormEvent, useRef, useState } from "react";
+
 import { useHistory, useParams } from "react-router-dom";
 
-import { Button } from "../components/Button";
+import { database } from "../services/firebase";
 
 import logoImg from "../assets/logo.svg";
-
 // import answerImg from "../assets/answer.svg";
-
 import deleteImg from "../assets/delete.svg";
-
 import endImg from "../assets/end.png";
-
 // import CheckImg from "../assets/check.svg";
-
 // import answerFig from '../assets/ansFig.png';
 // import interrogation from '../assets/inte.png';
 
-import { useRoom } from "../hooks/useRoom";
-
-import { database } from "../services/firebase";
-import { FormEvent, useState } from "react";
-import { useAuth } from "../hooks/useAuth";
-import { useEffect } from "react";
-
+import { Button } from "../components/Button";
 import { RoomCode } from "../components/RoomCode";
+import BackButton from "../components/backButton";
+
+
+import { useRoom } from "../hooks/useRoom";
+import { useAuth } from "../hooks/useAuth";
+import useOnClickOutside from "../hooks/useOuterClick";
 
 import Skeleton from "react-loading-skeleton";
 
@@ -32,14 +29,11 @@ import "moment/locale/pt-br";
 import "../styles/room.scss";
 import "../styles/answers.scss";
 import "../styles/responsiveness.scss";
-import BackButton from "../components/backButton";
+
 
 type RoomParams = {
-  id: string;
-};
-
-type QuestionId = {
-  questionId: string;
+  id: string
+  questionId: string
 };
 
 type specificQuestionsProps = {
@@ -63,37 +57,41 @@ type specificQuestionsProps = {
   answers: string;
 };
 
+
 export function Answers() {
   const history = useHistory();
 
   const { user, signInWithGoogle } = useAuth();
 
+  const [ isTrue, setIsTrue ] = useState<boolean>( false );
+
   // pegando parametro de rota.
   const params = useParams<RoomParams>();
   const roomId = params.id;
+  
+  const paramsAnswer = useParams<RoomParams>();
+  const questionId = paramsAnswer.questionId;
 
-  const paramsAnswer = useParams<QuestionId>();
-  const questionId = paramsAnswer.questionId;  
+  const ref = useRef<HTMLDivElement>( null );
 
   // hook
-  useRoom(roomId);
+  useRoom( roomId );
 
-  const [answered, setAnswered] = useState<string>();
+  const [ answered, setAnswered ] = useState<string>();
 
-  const [specificQuestion, setSpecificQuestion] = useState<specificQuestionsProps>(Object);
+  const [ specificQuestion, setSpecificQuestion ] = useState<specificQuestionsProps>(Object);
 
   useEffect( () => {
-    getspecificQuestion();
+   getspecificQuestion(); 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomId, questionId]);
+  }, [ roomId, questionId ] );
 
-  function getspecificQuestion() {
-    database
-      .ref(`rooms/${roomId}/questions/${questionId}`)
-      .on("value", (room) => {
+  function getspecificQuestion() {     
+    database.ref(`rooms/${roomId}/questions/${questionId}`)
+      .on("value", ( room ) => {
         const questionObj = room.val();
 
-        setSpecificQuestion(questionObj);
+        setSpecificQuestion( questionObj );       
       });
 
     return () => {
@@ -102,33 +100,45 @@ export function Answers() {
   }
 
   async function handleEndRoom() {
-   await database.ref(`rooms/${roomId}`).update({ endedAt: new Date() });
+   try {
+    await database.ref(`rooms/${roomId}`).update({ endedAt: new Date() });
     history.push("/");
+   } catch( error: any ) {
+    console.log(error);
+   }
   }
 
   async function handleAnswerQuestion( e: FormEvent, questionId: string ) {   
     e.preventDefault();
-
-    if( answered?.trim() === '' ) {
-      return;
+    try {
+      if( answered?.trim() === '' ) {
+        return;
+      }
+        await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+          answers: answered,
+          isAnswered: true
+        });
+        setAnswered('');
     }
-      await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
-        answers: answered,
-        isAnswered: true
-      });
-      setAnswered('');
+    catch(error : any) {
+      console.log(error);
+    }
   }
 
-  async function handleDeleteQuestion(questionId: string) {
+  async function handleDeleteQuestion( questionId: string ) {    
     if ( window.confirm( "Excluir sua pergunta?" ) ) {
       await database.ref(`rooms/${roomId}/questions/${questionId}`).remove();
        history.push(`/admin/rooms/${roomId}`);
     }
   }
 
-  async function handleDeleteAnswer(questionId: string) {
-    if ( window.confirm( "Excluir sua resposta?" ) ) {
-      await database.ref(`rooms/${roomId}/questions/${questionId}/answers`).remove();       
+  async function handleDeleteAnswer( questionId: string ) {
+    try {
+      if ( window.confirm( "Excluir sua resposta?" ) ) {
+        await database.ref(`rooms/${roomId}/questions/${questionId}/answers`).remove();       
+      }
+    } catch(error: any) {
+      console.log(error);
     }
   }
 
@@ -136,8 +146,20 @@ export function Answers() {
     return item.replace( /\b(\w)/g, string => string.toUpperCase() );
   }
 
-  return (    
+  function handleCloseModal() {  
+    if ( isTrue === true ) {    
+      setIsTrue( false );      
+      return;
+    }    
+  };
+
+  // inserindo hook no DOM
+  useOnClickOutside( ref, handleCloseModal );
+
+  return (  
+  <>   
     <div id="page-room">
+       
       <header> 
           <div className="content">
             <img src={ logoImg } alt="askm" />
@@ -275,6 +297,7 @@ export function Answers() {
       </div>
       <> <BackButton /> </>
     </div>
+  </>
   );
 }
 
