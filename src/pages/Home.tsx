@@ -24,11 +24,11 @@ export function Home() {
   const { user, signInWithGoogle } = useAuth();
   const [ roomCode, setRoomCode ] = useState('');
 
-  const nonExistentRoom = () => toast.warn('SALA INEXISTENTE', { 
+  const nonExistentRoom = () => toast.warn(' SALA INEXISTENTE ', { 
     backgroundColor: '#693db1', color: 'white',
   });
 
-  const errorRoom = () => toast.error('SALA ENCERRADA', { 
+  const errorRoom = () => toast.error(' SALA ENCERRADA ', { 
     backgroundColor: '#d74242', color: 'white'
   });
  
@@ -41,7 +41,7 @@ export function Home() {
   history.push('/rooms/new');
 }
 
-async function handleJoinRoom(e: FormEvent) {
+async function handleJoinRoom( e: FormEvent ) {
   e.preventDefault();
   // verificando se há 'espaços' no input;
   if( roomCode.trim() === '' ) {
@@ -90,30 +90,30 @@ return (
     </aside>
 
     <main>
-        <div className="main-content">
-          <img src={ logoImg } alt="headerLogo" title="logo" />
-            <button className="create-room" onClick={ handleCreateNewRoom }>
+      <div className="main-content">
+            <img src={ logoImg } alt="headerLogo" title="logo" />
+              <button className="create-room" onClick={ handleCreateNewRoom }>
                 <img src={ googleIconImg } alt="" />
-                Crie sua sala com o Google
-            </button>
-          
-          <div className="separator"> ou entre em uma sala </div>
+                  Crie sua sala com o Google
+              </button>
+            
+            <div className="separator"> ou entre em uma sala </div>
 
-          <form onSubmit={ handleJoinRoom }>
-              <input 
-                  type="text"
-                  onChange={ e => setRoomCode(e.target.value) }
-                  value={ roomCode }
-              />
+            <form onSubmit={ handleJoinRoom }>
+                <input 
+                    type="text"
+                    onChange={ e => setRoomCode( e.target.value ) }
+                    value={ roomCode }
+                />
 
-              <Button type="submit">
-                Entrar na sala
-              </Button>
+                <Button type="submit">
+                  Entrar na sala
+                </Button>
 
-              <ToastContainer             
-                position={ 'top-center' } 
-                delay={ 5000 } />                
-          </form>
+                <ToastContainer             
+                  position={ 'top-center' } 
+                  delay={ 5000 } />                
+            </form>
         </div>
     </main>
   </div>

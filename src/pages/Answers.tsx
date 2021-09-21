@@ -2,12 +2,14 @@ import { useEffect, FormEvent, useRef, useState } from "react";
 
 import { useHistory, useParams } from "react-router-dom";
 
-import { database } from "../services/firebase";
+import { auth, database } from "../services/firebase";
 
 import logoImg from "../assets/logo.svg";
 // import answerImg from "../assets/answer.svg";
 import deleteImg from "../assets/delete.svg";
-import endImg from "../assets/end.png";
+import signOutImg from "../assets/end.png";
+import fig from '../assets/empty-questions.svg';
+import endRoomImg from '../assets/endRoom.png';
 // import CheckImg from "../assets/check.svg";
 // import answerFig from '../assets/ansFig.png';
 // import interrogation from '../assets/inte.png';
@@ -19,6 +21,7 @@ import BackButton from "../components/backButton";
 
 import { useRoom } from "../hooks/useRoom";
 import { useAuth } from "../hooks/useAuth";
+
 import useOnClickOutside from "../hooks/useOuterClick";
 
 import Skeleton from "react-loading-skeleton";
@@ -27,9 +30,12 @@ import Moment from "react-moment";
 import "moment/locale/pt-br";
 
 import "../styles/room.scss";
-import "../styles/answers.scss";
-import "../styles/responsiveness.scss";
 
+import "../styles/answers.scss";
+
+import "../styles/modal.scss";
+
+import "../styles/responsiveness.scss";
 
 type RoomParams = {
   id: string
@@ -57,14 +63,9 @@ type specificQuestionsProps = {
   answers: string;
 };
 
-
 export function Answers() {
   const history = useHistory();
-
-  const { user, signInWithGoogle } = useAuth();
-
-  const [ isTrue, setIsTrue ] = useState<boolean>( false );
-
+  
   // pegando parametro de rota.
   const params = useParams<RoomParams>();
   const roomId = params.id;
@@ -74,37 +75,44 @@ export function Answers() {
 
   const ref = useRef<HTMLDivElement>( null );
 
-  // hook
-  useRoom( roomId );
+  const { user, signInWithGoogle } = useAuth();
+
+  const [ isTrue, setIsTrue ] = useState<boolean>( false );
+
+  const [ isSelectedAnswer, setSelectedAnswer ] = useState<boolean>( false );
 
   const [ answered, setAnswered ] = useState<string>();
 
   const [ specificQuestion, setSpecificQuestion ] = useState<specificQuestionsProps>(Object);
+
+   // hook
+  useRoom( roomId );
 
   useEffect( () => {
    getspecificQuestion(); 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ roomId, questionId ] );
 
-  function getspecificQuestion() {     
-    database.ref(`rooms/${roomId}/questions/${questionId}`)
-      .on("value", ( room ) => {
+ function getspecificQuestion() {  
+     database.ref(`rooms/${roomId}/questions/${questionId}`)
+      .on( 'value', ( room ) => {
         const questionObj = room.val();
 
-        setSpecificQuestion( questionObj );       
+        setSpecificQuestion( questionObj );  
       });
 
-    return () => {
-      database.ref(`rooms/${roomId}/questions/${questionId}`).off("value");
-    };
+      return () => {
+        database.ref(`rooms/${roomId}/questions/${questionId}`).off('value');
+      }
+    
   }
 
   async function handleEndRoom() {
    try {
-    await database.ref(`rooms/${roomId}`).update({ endedAt: new Date() });
-    history.push("/");
+      await database.ref(`rooms/${roomId}`).update( { endedAt: new Date() } );
+       history.push('/');
    } catch( error: any ) {
-    console.log(error);
+    console.log( error );
    }
   }
 
@@ -120,25 +128,28 @@ export function Answers() {
         });
         setAnswered('');
     }
-    catch(error : any) {
-      console.log(error);
+    catch( error : any ) {
+      console.log( error );
     }
   }
 
   async function handleDeleteQuestion( questionId: string ) {    
-    if ( window.confirm( "Excluir sua pergunta?" ) ) {
-      await database.ref(`rooms/${roomId}/questions/${questionId}`).remove();
-       history.push(`/admin/rooms/${roomId}`);
+    try {
+      if ( window.confirm( " Excluir essa pergunta? " ) ) {
+        await database.ref(`rooms/${roomId}/questions/${questionId}`).remove();
+         history.push(`/admin/rooms/${roomId}`);
+      }
+    } catch( error: any ) {
+      console.log( error );
     }
   }
 
   async function handleDeleteAnswer( questionId: string ) {
     try {
-      if ( window.confirm( "Excluir sua resposta?" ) ) {
-        await database.ref(`rooms/${roomId}/questions/${questionId}/answers`).remove();       
-      }
-    } catch(error: any) {
-      console.log(error);
+      await database.ref(`rooms/${roomId}/questions/${questionId}/answers`).remove();
+      handleCloseAnswerModal();
+    } catch( error: any ) {
+      console.log( error );
     }
   }
 
@@ -146,28 +157,135 @@ export function Answers() {
     return item.replace( /\b(\w)/g, string => string.toUpperCase() );
   }
 
+  function handleOpenModal() {
+    if ( isTrue === false ) {
+      setIsTrue( true );
+    }     
+  }
+
   function handleCloseModal() {  
     if ( isTrue === true ) {    
-      setIsTrue( false );      
-      return;
+      setIsTrue( false );
     }    
-  };
+  }
 
-  // inserindo hook no DOM
+  function handleOpenAnswerModal() {
+    if ( isSelectedAnswer === false ) {  
+      setSelectedAnswer( true );
+    } 
+  }
+
+  function handleCloseAnswerModal() {
+    if ( isSelectedAnswer === true ) {  
+      setSelectedAnswer( false );
+    }   
+  }
+
+  async function signOutUser() {
+    try {
+     await auth.signOut();
+        history.push('/');
+    } catch( err: any ) {
+        console.log( 'n deslogou' );
+    }
+  }
+
+  // inserindo Hook do OutClick no DOM
+  // Close Question Modal
   useOnClickOutside( ref, handleCloseModal );
+
+  // Close Answer modal
+  useOnClickOutside( ref, handleCloseAnswerModal );
 
   return (  
   <>   
     <div id="page-room">
-       
+      {/* Modal question */}
+      { isTrue === true ? (
+        <div id="modalContainer">
+          <div className="modal" ref={ ref }>            
+              <div className="separatorDiv">
+                <img id="separatorFig" src={ fig } alt="" title="fig" />
+
+                <div className="modalContent">                       
+                  <p> Tem certeza que deseja deletar essa pergunta ? </p>
+                </div>
+                
+                <div className="modalButtons">  
+                  <button 
+                    className="quit"
+                    title="Voltar" 
+                    onClick={ () => handleCloseModal() }> 
+                      <i 
+                        className="fas fa-arrow-alt-circle-left" 
+                        style={{fontSize:'20px'}}>                                     
+                      </i>
+                  </button>
+                  
+                  <button
+                    className="delete"
+                    type="button"
+                    title="Deletar pergunta"                                
+                    onClick={ () => handleDeleteQuestion( questionId ) }>                                 
+                      <i className="far fa-trash-alt" 
+                        style={{fontSize:'20px'}}> 
+                      </i>                        
+                  </button>                  
+                </div>       
+              </div>
+          </div>
+        </div>  
+      ) : ( null ) }
+
+       {/* Modal Answers */}
+      { isSelectedAnswer === true ? (
+        <div id="modalContainer">
+          <div className="modal" ref={ ref }>            
+              <div className="separatorDiv">
+                <img id="separatorFig" src={ fig } alt="" title="fig" />
+
+                <div className="modalContent">                       
+                  <p> Tem certeza que deseja deletar essa resposta ? </p>
+                </div>
+                
+                <div className="modalButtons">  
+                  <button 
+                    className="quit"
+                    title="Voltar" 
+                    onClick={ () => handleCloseAnswerModal() }> 
+                      <i 
+                        className="fas fa-arrow-alt-circle-left" 
+                        style={{fontSize:'20px'}}>                                     
+                      </i>
+                  </button>
+                  
+                  <button
+                    className="delete"
+                    type="button"
+                    title="Deletar pergunta"                                
+                    onClick={ () => handleDeleteAnswer( questionId ) }>                                 
+                      <i className="far fa-trash-alt" 
+                        style={{fontSize:'20px'}}> 
+                      </i>                        
+                  </button>                  
+                </div>       
+              </div>
+          </div>
+        </div>  
+      ) : ( null ) }
+
       <header> 
           <div className="content">
             <img src={ logoImg } alt="askm" />
               <div>
                 <RoomCode code={ roomId } />
-                  <Button isOutLined onClick={ handleEndRoom }>
-                    <img className="endRoomImg" src={endImg} alt="Encerrar Sala" />
+                  <Button isOutLined onClick={ handleEndRoom }>                 
+                    <img src={ endRoomImg } alt="endRoomFig" title="Encerrar Sala" />
                   </Button>
+
+                  <Button isOutLined onClick={ signOutUser }>                 
+                    <img className="endRoomImg" src={ signOutImg } alt="Deslogar" title="Encerrar sessão" />
+                  </Button>                  
               </div>
           </div>
       </header>
@@ -178,19 +296,19 @@ export function Answers() {
                 <p> { specificQuestion?.content || <Skeleton count={ 7 } height={ 25 } /> } </p>
               <footer>
                 <div className="user-info">
-                  {specificQuestion?.author?.avatar ? (
-                    <img src={ `${specificQuestion?.author?.avatar}` } alt={ `${specificQuestion?.author?.name}`  } />  
+                  { specificQuestion?.author?.avatar ? (
+                    <img src={ `${ specificQuestion?.author?.avatar }` } alt={ `${specificQuestion?.author?.name}`  } />  
                   ) : (
                      <Skeleton count={ 1 } height={ 35 } width={ 35 } circle={ true } /> 
                   )}
 
-                  {specificQuestion?.author?.name ? (
+                  { specificQuestion?.author?.name ? (
                     <span> { convertFirstCharacterAllWordsToUppercase( `${specificQuestion?.author?.name}` ) },</span>
                   ) : (
                     <Skeleton count={ 1 } height={ 25 } width={ 250 } />
                   )}
 
-                  {specificQuestion?.createdAt ? (                  
+                  { specificQuestion?.createdAt ? (                  
                     <span> <Moment to={ specificQuestion.createdAt.toString() } />.</span>
                   ) : (
                      <Skeleton count={ 1 } height={ 25 } width={ 250 } />
@@ -203,7 +321,7 @@ export function Answers() {
                       <button 
                          id="answer-delete-question"
                          type="button"
-                         onClick={ () => handleDeleteQuestion( questionId ) }
+                         onClick={ () => handleOpenModal( ) }
                        >
                          <img src={ deleteImg } alt="Deletar Pergunta" />
                        </button>
@@ -216,9 +334,9 @@ export function Answers() {
               </footer>       
             </div>            
            
-            {specificQuestion?.answers ? (
+            { specificQuestion?.answers ? (
                 <div className="answer-list">
-                  {specificQuestion?.answers !== '' ? (
+                  { specificQuestion?.answers !== '' ? (
                     <p> { specificQuestion?.answers } </p>
                   ) : (
                     <div />
@@ -231,7 +349,7 @@ export function Answers() {
                         <button 
                           id="answer-delete-question"
                           type="button"
-                          onClick={ () => handleDeleteAnswer( questionId ) }
+                          onClick={ () => handleOpenAnswerModal() }
                         >
                           <img src={ deleteImg } alt="Deletar Pergunta" /> 
                         </button>
@@ -258,7 +376,7 @@ export function Answers() {
               )}                
             </div>  
 
-            {specificQuestion?.author?.name === user?.name ? (
+            { specificQuestion?.author?.name === user?.name ? (
               <form>
                 <textarea
                   placeholder="Responder pergunta: "

@@ -14,11 +14,11 @@ export function RoomCode( props: clipBoardProps ) {
     }
 
   return (
-    <button className="room-code" onClick={copyRoomCodeToClipboard}>
+    <button className="room-code" onClick={ copyRoomCodeToClipboard } title="Chave de acesso a sala">
       <div>
         <img src={ copyImg } alt="code" />        
       </div>
-      <span>SALA: { props.code } </span>
+      <span> SALA: { props.code } </span>
     </button>
   );
 }

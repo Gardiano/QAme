@@ -1,0 +1,126 @@
+.menuMobileContainer {
+  width: 100%;
+  height: 100vh;
+
+  display: block;
+
+  background: rgba(0, 0, 0, 0.8);
+
+  z-index: 9999;
+
+  .menuMobileBox {
+    width: 380px;
+    height: 100vh;
+
+    display: block;
+
+    float: left;
+
+    background: #ffff;
+
+    .logoDiv {
+      > img {
+        height: 50px;
+        margin: 20px auto;
+        display: block;
+      }
+      border-bottom: 1px solid rgb(230, 230, 230);
+    }
+
+    .roomCodeDiv {
+      display: flex;
+
+      strong {
+        font-size: 14px;
+        line-height: 3;
+        text-align: center;
+      }
+
+      > div {
+        margin: 20px auto;
+        display: block;
+      }
+    }
+
+    .endRoomDiv {
+      width: 100px;
+      height: 50px;
+
+      display: block;
+      margin: auto;
+      margin-left: 40px;
+
+      strong {
+        font-size: 14px;
+        line-height: 3;
+        text-align: center;
+      }
+
+      > .endRoomButton {
+        width: 290px;
+        height: 30px;
+
+        display: block;
+        margin: auto;
+
+        cursor: pointer;
+        border: 1px solid rgb(230, 230, 230);
+        border-radius: 8px;
+        background: #ffff;
+
+        > img {
+          margin-top: 2px;
+          height: 25px;
+        }
+      }
+    }
+
+    .signOutDiv {
+      width: 100px;
+      height: 50px;
+
+      display: block;
+      margin-top: 30px;
+      margin-left: 40px;
+
+      strong {
+        font-size: 14px;
+        line-height: 3;
+        text-align: center;
+      }
+
+      > .signOutButton {
+        width: 290px;
+        height: 30px;
+
+        display: block;
+        margin: auto;
+
+        cursor: pointer;
+        border: 1px solid rgb(230, 230, 230);
+        border-radius: 8px;
+        background: #ffff;
+
+        > img {
+          margin-top: 2px;
+          height: 25px;
+        }
+      }
+    }
+  }
+}
+
+.teste01 {
+  flex: 1;
+
+  display: block;
+  margin: auto;
+
+
+  justify-content: center;
+  
+}
+
+@media(max-width: 500px) {
+
+}

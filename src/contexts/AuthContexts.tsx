@@ -16,7 +16,7 @@ type UserProps = {
   }
 
   type AuthContextProviderProps = {
-      children: ReactNode
+    children: ReactNode
   }  
 
 //   Criando Context
@@ -57,24 +57,23 @@ export function AuthContextProvider( props: AuthContextProviderProps ) {
     async function signInWithGoogle() {
       const provider = new firebase.auth.GoogleAuthProvider();
       
-      const res = await auth.signInWithPopup(provider);
-  
-          if( res.user ) {
-            // info do usuário;
-            const { displayName, photoURL, uid } = res.user;
-  
-            if( !displayName || !photoURL ) {
-              throw new Error( 'Falta de informações da sua Google Account!' );
-            } else {
-              setUser({ 
-                id: uid,
-                name: displayName, 
-                avatar: photoURL
-              });
-            }
+      const res = await auth.signInWithPopup( provider );  
+          
+        if( res.user ) {
+          // info do usuário;
+          const { displayName, photoURL, uid } = res.user;
 
-          };
-  }
+          if( !displayName || !photoURL ) {
+            throw new Error( 'Falta de informações da sua Google Account!' );
+          } else {
+            setUser({ 
+              id: uid,
+              name: displayName, 
+              avatar: photoURL
+            });
+          }
+        };
+      }
     
     return (
       <AuthContext.Provider value={ {  user, signInWithGoogle } }>            

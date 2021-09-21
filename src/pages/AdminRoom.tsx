@@ -13,18 +13,22 @@ import fig from '../assets/empty-questions.svg';
 import { Button } from "../components/Button";
 import { RoomCode } from "../components/RoomCode";
 import { Question } from "../components/Question";
-import BackButton from "../components/backButton";
+import { BackButton } from "../components/backButton";
 
 // import { useAuth } from "../hooks/useAuth";
 import { useRoom } from "../hooks/useRoom";
 
-import { database } from "../services/firebase";
+import { auth, database } from "../services/firebase";
 
 import useOnClickOutside from "../hooks/useOuterClick";
 
+import { ToastContainer, toast } from 'react-toast';
+
 import "../styles/room.scss";
+
+// import "../styles/adminRoom.scss";
+
 import "../styles/responsiveness.scss";
-import "../styles/modal.scss";
 
 type RoomParams = {
   id: string;
@@ -49,44 +53,57 @@ export function AdminRoom() {
 
   const [ isTrue, setIsTrue ] = useState<boolean>( false );
 
+  const [ isAnswered, setIsAnswered ] = useState<boolean>( false );
+
   const [ uniqueId, setUniqueId] = useState<string>('null');
 
+  const nonExistentRoom = () => toast.warn(' Sala inexistente ', { 
+    backgroundColor: '#693db1', color: 'white',
+  });
+
+  const toastDeleteQuestion = () => toast.error(' Pergunta deletada ', { 
+    backgroundColor: '#d74242', color: 'white',
+  });
+
   useEffect( () => {
+    
+  }, [ roomId, uniqueId ] );
 
-  }, [ roomId ] );
-
-  // inserindo hook no DOM
-  useOnClickOutside( ref, handleCloseModal );
 
   async function handleEndRoom() {
-    database.ref(`rooms/${roomId}`).update( { endedAt: new Date() } );
-    history.push('/');
+    try {
+      await database.ref(`rooms/${roomId}`).update( { endedAt: new Date() } );
+        history.push('/');
+    } catch( error: any ) {
+        console.log( error );
+      }
   }
 
   async function handleCheckQuestionAsAnswered( questionId: string ) {
-    await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
-      isAnswered: true,
-    });
+    try {
+      await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+        isAnswered: true,
+      });
+    } catch( error : any ) {
+      console.log( error );
+    }
   }
 
-  // async function handleAnswerQuestion(questionId: string) {
-  //   await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
-  //     answers: answered,
-  //   });
-  // }
-
   async function handleHighLightedQuestion( questionId: string ) {
-    await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
-      isHighLighted: true,
-    });
+    try {
+      await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+        isHighLighted: true,
+      });
+    } catch( error: any ) {
+      console.log( error );
+    }
   }
 
   async function handleDeleteQuestion() { 
-    try {  
-       if ( window.confirm( " Excluir sua pergunta? " ) ) {          
-         await database.ref(`rooms/${roomId}/questions/${uniqueId}`).remove(); 
-           handleCloseModal();
-     }
+    try {         
+      await database.ref(`rooms/${roomId}/questions/${uniqueId}`).remove(); 
+        handleCloseModal();
+          toastDeleteQuestion();
     } catch ( err: any ) {
       console.log( err );
     }
@@ -95,7 +112,7 @@ export function AdminRoom() {
   function handleOpenModal( uId: string ) {
     if ( isTrue === false ) {
       let uniqueId = uId;
-      setUniqueId( uniqueId );   
+      setUniqueId( uniqueId );      
       setIsTrue( true );
     }     
   };
@@ -103,17 +120,35 @@ export function AdminRoom() {
   function handleCloseModal() {  
     if ( isTrue === true ) {    
       setIsTrue( false );
-    }    
+    } 
   };
 
+  async function signOutUser() {
+    try {
+     await auth.signOut();
+      history.push('/');
+    } catch ( err: any ) {
+      console.log( err );
+    }
+  }
+
+   // inserindo hook no DOM
+   useOnClickOutside( ref, handleCloseModal );
+
 return (   
-  <div id="page-room"> 
+  <div id="page-room">
+    
+      <ToastContainer
+        position={ 'top-center' } 
+        delay={ 5000 } 
+      />
+
       <header>
         <div className="content">
           <img src={ logoImg } alt="askm" />
             <div>
               <RoomCode code={ roomId } />
-                <Button isOutLined onClick={ handleEndRoom }>
+                <Button isOutLined onClick={ () => signOutUser() }>
                   <img className="endRoomImg" src={ endImg } alt="Encerrar Sala" />
                 </Button>
             </div>
@@ -144,14 +179,14 @@ return (
                   answers={question.answers}
                 >
 
-                { question.isAnswered === true ? (
+                {  question.isAnswered === true ? (
                   <> 
                     <Link to={`/admin/rooms/${roomId}/answer/${question.id}`} >
                       <img src={ answerImg } alt="Responder Pergunta" />
                     </Link>
 
                     <button type="button"
-                      onClick={ () => handleOpenModal( question.id ) } >
+                      onClick={ (e) => handleOpenModal( question.id ) } >
                       <img src={ deleteImg } alt="Deletar Pergunta" />
                     </button>
                   </>                    
@@ -187,9 +222,12 @@ return (
                   >
                     <img src={ deleteImg } alt="Deletar Pergunta" />
                   </button>
+                  </>                  
+                  )}    
 
-                  { isTrue === true ? (
-                    <div id="modalContainer">
+                   { /* Modal delete question */ }
+                   { isTrue === true ? (
+                    <div id="modalContainer" style={ {background: 'rgba(0, 0, 0, 0.22)' } }>
                       <div className="modal" ref={ ref }>            
                           <div className="separatorDiv">
                             <img id="separatorFig" src={ fig } alt="" title="fig" />
@@ -199,30 +237,30 @@ return (
                             </div>
                             
                             <div className="modalButtons">  
-                              <button className="quit" onClick={ () => handleCloseModal() }> 
-                              <i className="fas fa-arrow-alt-circle-left" style={{fontSize:'20px'}}></i>
+                              <button 
+                                className="quit"
+                                title="Voltar" 
+                                onClick={ () => handleCloseModal() }> 
+                                  <i 
+                                   className="fas fa-arrow-alt-circle-left" 
+                                   style={{fontSize:'20px'}}>                                     
+                                  </i>
                               </button>
                               
                               <button
                                 className="delete"
                                 type="button"
                                 title="Deletar pergunta"                                
-                                onClick={ () => handleDeleteQuestion() }
-                              >
-                                {/* <img src={ deleteImg } alt="Deletar Pergunta" />   */}
-                                 
-                                <i className="far fa-trash-alt" style={{fontSize:'20px'}}> </i>                        
+                                onClick={ () => handleDeleteQuestion() }>                                 
+                                  <i className="far fa-trash-alt" 
+                                    style={{fontSize:'20px'}}> 
+                                  </i>                        
                               </button>                  
                             </div>       
                           </div>
                       </div>
                     </div>  
-                    ) : ( null ) } 
-
-                  </>                  
-                  )}
-
-                                 
+                    ) : ( null ) }                             
                 </Question>
               </>
             );
