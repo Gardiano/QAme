@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRef } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 
+// images/icons
 import CheckImg from "../assets/check.svg";
 import answerImg from "../assets/answer.svg";
 import logoImg from "../assets/logo.svg";
@@ -14,11 +15,12 @@ import { Button } from "../components/Button";
 import { RoomCode } from "../components/RoomCode";
 import { Question } from "../components/Question";
 import { BackButton } from "../components/backButton";
+import { MenuMobile } from '../components/menuMobile';
 
 // import { useAuth } from "../hooks/useAuth";
 import { useRoom } from "../hooks/useRoom";
 
-import { auth, database } from "../services/firebase";
+import { database } from "../services/firebase";
 
 import useOnClickOutside from "../hooks/useOuterClick";
 
@@ -29,6 +31,7 @@ import "../styles/room.scss";
 // import "../styles/adminRoom.scss";
 
 import "../styles/responsiveness.scss";
+import { useMenuMobile } from "../hooks/useMenuMobile";
 
 type RoomParams = {
   id: string;
@@ -48,14 +51,17 @@ export function AdminRoom() {
   // node do DOM
   const ref = useRef<HTMLDivElement>(null);
 
+
   // hook
+  const { closeMenuMobile } = useMenuMobile();
+
   const { title, questions } = useRoom( roomId );
 
   const [ isTrue, setIsTrue ] = useState<boolean>( false );
 
-  const [ isAnswered, setIsAnswered ] = useState<boolean>( false );
+  const [ handleOpenMenu, setHandleOpenMenu ] = useState<boolean>( false );
 
-  const [ uniqueId, setUniqueId] = useState<string>('null');
+  const [ uniqueId, setUniqueId ] = useState<string>('null');
 
   const nonExistentRoom = () => toast.warn(' Sala inexistente ', { 
     backgroundColor: '#693db1', color: 'white',
@@ -66,9 +72,7 @@ export function AdminRoom() {
   });
 
   useEffect( () => {
-    
   }, [ roomId, uniqueId ] );
-
 
   async function handleEndRoom() {
     try {
@@ -77,7 +81,7 @@ export function AdminRoom() {
     } catch( error: any ) {
         console.log( error );
       }
-  }
+  };
 
   async function handleCheckQuestionAsAnswered( questionId: string ) {
     try {
@@ -87,7 +91,7 @@ export function AdminRoom() {
     } catch( error : any ) {
       console.log( error );
     }
-  }
+  };
 
   async function handleHighLightedQuestion( questionId: string ) {
     try {
@@ -97,7 +101,7 @@ export function AdminRoom() {
     } catch( error: any ) {
       console.log( error );
     }
-  }
+  };
 
   async function handleDeleteQuestion() { 
     try {         
@@ -107,13 +111,13 @@ export function AdminRoom() {
     } catch ( err: any ) {
       console.log( err );
     }
- }
+  };
 
   function handleOpenModal( uId: string ) {
     if ( isTrue === false ) {
       let uniqueId = uId;
-      setUniqueId( uniqueId );      
-      setIsTrue( true );
+        setUniqueId( uniqueId );      
+          setIsTrue( true );
     }     
   };
 
@@ -123,37 +127,63 @@ export function AdminRoom() {
     } 
   };
 
-  async function signOutUser() {
-    try {
-     await auth.signOut();
-      history.push('/');
-    } catch ( err: any ) {
-      console.log( err );
-    }
-  }
+  function handleOpenMenuMobile() {
+    if( handleOpenMenu === false ) {
+      setHandleOpenMenu( true );
+    };
+  };
 
-   // inserindo hook no DOM
-   useOnClickOutside( ref, handleCloseModal );
+  function handleCloseMenuMobile() {
+    if( handleOpenMenu === true ) {
+      setHandleOpenMenu( false );
+    };
+  };
+
+  // inserindo hook no DOM
+  useOnClickOutside( ref, handleCloseModal );
+
+  useOnClickOutside( ref, closeMenuMobile );
 
 return (   
   <div id="page-room">
-    
-      <ToastContainer
-        position={ 'top-center' } 
-        delay={ 5000 } 
-      />
 
-      <header>
-        <div className="content">
-          <img src={ logoImg } alt="askm" />
+          <ToastContainer
+            position={ 'top-center' } 
+            delay={ 5000 } 
+          />
+      
+      { handleOpenMenu === true ? (
+          <>
             <div>
-              <RoomCode code={ roomId } />
-                <Button isOutLined onClick={ () => signOutUser() }>
-                  <img className="endRoomImg" src={ endImg } alt="Encerrar Sala" />
-                </Button>
+              <div>
+                <MenuMobile
+                  children 
+                  ref={ ref } 
+                  isOutLined 
+                  code={ roomId }                
+                /> 
+              </div>
             </div>
-        </div>
-      </header>
+          </>
+      ) : (
+          <header>
+            {/* MenuMobile */}
+            <img src={ logoImg } alt="logo" />
+              <button onClick={ handleOpenMenuMobile }> <i className="fas fa-bars"> </i> </button>
+
+              {/* Navbar */}
+              <div className="content">
+                <img src={ logoImg } alt="logo" />
+                  <div>
+                    <RoomCode code={ roomId } />
+                      <Button isOutLined>
+                        <img className="endRoomImg" src={ endImg } alt="Encerrar Sala" />
+                      </Button>
+                  </div>
+              </div>
+          </header>
+      )
+    }
 
       <main className="content">
         <div className="room-title">
@@ -179,14 +209,14 @@ return (
                   answers={question.answers}
                 >
 
-                {  question.isAnswered === true ? (
+                { question.isAnswered === true ? (
                   <> 
                     <Link to={`/admin/rooms/${roomId}/answer/${question.id}`} >
                       <img src={ answerImg } alt="Responder Pergunta" />
                     </Link>
 
                     <button type="button"
-                      onClick={ (e) => handleOpenModal( question.id ) } >
+                      onClick={ () => handleOpenModal( question.id ) } >
                       <img src={ deleteImg } alt="Deletar Pergunta" />
                     </button>
                   </>                    

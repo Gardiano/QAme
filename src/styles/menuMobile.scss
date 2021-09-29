@@ -1,126 +1,135 @@
 .menuMobileContainer {
   width: 100%;
-  height: 100vh;
+  height: 100%;
 
   display: block;
 
+  margin-top: -32px;
+
   background: rgba(0, 0, 0, 0.8);
 
-  z-index: 9999;
+  position: absolute;
+
+  z-index: 9999;  
 
   .menuMobileBox {
-    width: 380px;
-    height: 100vh;
+    width: 375px;
+    height: 100%;
 
     display: block;
+    padding: 0;
 
     float: left;
 
     background: #ffff;
 
-    .logoDiv {
-      > img {
-        height: 50px;
-        margin: 20px auto;
-        display: block;
-      }
-      border-bottom: 1px solid rgb(230, 230, 230);
-    }
+    .menuMobileContent {
+      width: 350px;
 
-    .roomCodeDiv {
-      display: flex;
-
-      strong {
-        font-size: 14px;
-        line-height: 3;
-        text-align: center;
-      }
-
-      > div {
-        margin: 20px auto;
-        display: block;
-      }
-    }
-
-    .endRoomDiv {
-      width: 100px;
-      height: 50px;
-
+      margin: 20px auto;
       display: block;
-      margin: auto;
-      margin-left: 40px;
 
-      strong {
-        font-size: 14px;
-        line-height: 3;
-        text-align: center;
-      }
+      .logoDiv {
+        width: auto;
 
-      > .endRoomButton {
-        width: 290px;
-        height: 30px;
-
-        display: block;
-        margin: auto;
-
-        cursor: pointer;
-        border: 1px solid rgb(230, 230, 230);
-        border-radius: 8px;
-        background: #ffff;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgb(230, 230, 230);
 
         > img {
-          margin-top: 2px;
-          height: 25px;
+          height: 50px;
+          margin: 10px auto;
+          display: block;
         }
+       
       }
-    }
-
-    .signOutDiv {
-      width: 100px;
-      height: 50px;
-
-      display: block;
-      margin-top: 30px;
-      margin-left: 40px;
 
       strong {
-        font-size: 14px;
-        line-height: 3;
-        text-align: center;
+        font-size: 18px;
+        color: rgb(150, 150, 150);
+        padding-left: 20px;
+        display: block;
+        float: left;
+        margin-top: auto;
       }
 
-      > .signOutButton {
-        width: 290px;
-        height: 30px;
+      .roomCodeButton {
+        width: 70px;
+        height: auto;
 
-        display: block;
-        margin: auto;
+        button {
+          width: 300px;
+          margin-bottom: 5px;
+          margin-left: 20px;
 
-        cursor: pointer;
-        border: 1px solid rgb(230, 230, 230);
-        border-radius: 8px;
-        background: #ffff;
-
-        > img {
-          margin-top: 2px;
-          height: 25px;
+          img {
+            height: 20px;
+            margin: auto;
+          }
         }
       }
+
+      .endRoomButton {
+        width: 70px;
+        height: 35px;
+
+        display: block;
+
+        line-height: 2;
+
+        cursor: pointer;
+
+        border: transparent solid;
+
+        background: transparent;
+
+        img {
+          height: 20px;
+          margin-top: 2px;
+        }
+      }
+
+      .signOutButton {
+        width: 70px;
+        height: 15px;
+
+        border: transparent solid;
+        cursor: pointer;
+        display: block;
+
+        background: transparent;
+
+        img {
+          height: 20px;
+        }
+      }   
+
+    }
+
+    .closeModalButton {
+      width: 45px;
+      height: 40px;
+
+      display: block;
+      margin: 0 auto 30px;
+
+      position: fixed;
+
+      left: 150px;
+      bottom: 0; 
+
+      border-radius: 50px;
+      border: 1px solid rgb(221, 221, 221);
+
+      cursor: pointer;
+      background: transparent;
+
+      i {
+        color: rgb(45, 45, 116);
+      }
+      
     }
   }
 }
 
-.teste01 {
-  flex: 1;
-
-  display: block;
-  margin: auto;
-
-
-  justify-content: center;
-  
-}
-
-@media(max-width: 500px) {
-
+@media (max-width: 500px) {
 }

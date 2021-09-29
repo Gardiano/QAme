@@ -7,8 +7,6 @@ import { Home } from "./pages/Home";
 import { NewRoom } from "./pages/NewRoom";
 import { Room } from "./pages/Room";
 
-import { MenuMobile } from "./components/menuMobile";
-
 const Routes = () => (
   <BrowserRouter>
   {/* switch - nao permite que duas rotas iguais sejam chamadas ao mesmo tempo. */}
@@ -21,9 +19,7 @@ const Routes = () => (
       
       <Route exact path="/admin/rooms/:id" component={ AdminRoom } />
 
-      {/* <Route exact path="/admin/rooms/:id/answer/:questionId" component={ Answers } />  */}
-      
-      <Route exact path="/admin/rooms/:id/answer/:questionId" component={ MenuMobile } /> 
+      <Route exact path="/admin/rooms/:id/answer/:questionId" component={ Answers } />   
       
       <Route exact path="/rooms/:id/answer/:questionId" component={ Answers } />      
     </Switch>

@@ -7,10 +7,10 @@ export function useRoom(roomId: string) {
 
     // Record = object.entries - firebase object type.
     type FirebaseQuestions = Record<string, {      
-    author: {
-      name: string;
-      avatar: string;
-    }
+      author: {
+        name: string;
+        avatar: string;
+      }
 
       content: string;
       isAnswered: boolean;
@@ -53,14 +53,14 @@ export function useRoom(roomId: string) {
     useEffect( () => {
         const roomRef = database.ref( `rooms/${roomId}` );
     
-        // Object.entries = retorna um array com propriedade e valor da propriedade.
-        roomRef.on("value", (room) => {
+        // Object.entries = retorna um array com props e o conteúdo dessa propriedade.
+        roomRef.on("value", ( room ) => {
           const databaseRoom = room.val();
           
           const firebaseQuestions: FirebaseQuestions = databaseRoom.questions ?? {};
     
           const parsedQuestions = Object.entries( firebaseQuestions ).map(
-            ( [key, value] ) => {
+            ( [ key, value ] ) => {
               return {
                 id: key,
                 content: value.content,

@@ -18,7 +18,7 @@ export function RoomCode( props: clipBoardProps ) {
       <div>
         <img src={ copyImg } alt="code" />        
       </div>
-      <span> SALA: { props.code } </span>
+      <span> { props.code } </span>
     </button>
   );
 }
